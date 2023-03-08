@@ -13,6 +13,11 @@
     "primereact": "^9.0.0-beta.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+<<<<<<< Updated upstream
+=======
+    "react-helmet": "^6.1.0",
+    "react-quill": "^2.0.0",
+>>>>>>> Stashed changes
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
     "sweetalert2": "^11.7.1",
