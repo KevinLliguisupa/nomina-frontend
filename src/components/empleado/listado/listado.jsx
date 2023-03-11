@@ -35,7 +35,7 @@ const ListadoEmpleados = () => {
     };
 
     return (
-        <div>
+        <div className="card">
             {/* filters={filters} loading={loading} header={header}*/}
             <DataTable value={empleados} paginator rows={10} dataKey="id" filterDisplay="row"
                 globalFilterFields={['name', 'country.name', 'representative.name', 'status']} emptyMessage="No se encontro información.">
@@ -45,7 +45,6 @@ const ListadoEmpleados = () => {
                 <Column field="emp_email" header="Email" filter filterPlaceholder="some@any.com" style={{ minWidth: '12rem' }} />
                 <Column field="emp_direccion" header="Dirección" filter filterPlaceholder="Lugar..." style={{ minWidth: '12rem' }} />
                 <Column field="emp_nivel.niv_descripcion" header="Nivel" filter filterPlaceholder="Busqueda por cedula" style={{ minWidth: '12rem' }} />
-
                 <Column field="emp_estado" header="Activo" dataType="boolean" style={{ minWidth: '6rem' }} 
                 body={verifiedBodyTemplate} filter filterElement={verifiedRowFilterTemplate} />
             </DataTable>

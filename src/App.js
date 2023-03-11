@@ -10,6 +10,7 @@ import "./css/sb-admin-2.min.css";
 import "./vendor/fontawesome-free/css/all.min.css";
 import { Helmet } from "react-helmet";
 import ListadoEmpleados from "./components/empleado/listado/listado";
+import CreacionEmpleado from "./components/empleado/creacion/creacionEmpleado";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/" element={<ShowProducts />} />
                   <Route path="/contract" element={<ContratRegister />} />
                   <Route path='/empleados' element={<ListadoEmpleados />}></Route>
+                  <Route path='/empleados/nuevo' element={<CreacionEmpleado />}></Route>
                 </Routes>
               </div>
             </div>
