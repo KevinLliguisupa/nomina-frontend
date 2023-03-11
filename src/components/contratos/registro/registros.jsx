@@ -9,8 +9,10 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
-import { InputNumber } from 'primereact/inputnumber';
+import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
+import { InputNumber } from 'primereact/inputnumber';
+
 import './registro.css'
 
 const ContratRegister = () => {
@@ -19,17 +21,18 @@ const ContratRegister = () => {
 
 
     const emptyContract = {
-        con_id: "",
-        con_fecha_entrada: null,
-        con_fecha_salida: null,
-        con_liquidacion_estado: true,
-        con_liquidacion_fecha: null,
+        con_fecha_entrada: new Date(),
+        con_fecha_salida: new Date(),
+        con_liquidacion_estado: null,
+        con_liquidacion_fecha: new Date(),
         con_liquidacion_observacion: "",
         con_estado: true,
         cont_emp: {
             emp_cedula: ""
         },
-        pue_id: "",
+        cont_puest: {
+            pue_id: ""
+        },
         globalFilter: null
     }
 
@@ -44,7 +47,9 @@ const ContratRegister = () => {
 
     //employees
     const [employees, setEmployees] = useState({});
-    const [selectedEmployees, setSelectedEmployees] = useState(null);
+
+    //workstation
+    const [workstation, setWorkstation] = useState({});
 
     function formatCurrency(value) {
         return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -71,21 +76,29 @@ const ContratRegister = () => {
 
     const saveContract = () => {
         setSubmitted(true);
-        if (contract.con_id.trim()) {
+
+        if (contract.cont_emp.emp_cedula.trim()) {
             let _contracts = [...contracts];
             let _contract = { ...contract };
-            if (contract.con_id) {
-                const index = findIndexById(contract.con_id);
-                _contracts[index] = _contract;
-                // showToast('success', 'Product Updated', 'Product has been updated successfully.');
-            }
-            else {
-                _contract.con_id = createId();
-                _contracts.push(_contract);
-                // showToast('success', 'Product Created', 'Product has been created successfully.');
-            }
 
-            setContracts(_contracts);
+            axios.post('http://localhost:4000/nominaweb/api/v1/contrato/contratos', {
+                con_fecha_entrada: _contract.con_fecha_entrada,
+                con_fecha_salida: _contract.con_fecha_salida,
+                con_liquidacion_estado: _contract.con_liquidacion_estado,
+                con_liquidacion_fecha: _contract.con_liquidacion_fecha,
+                con_liquidacion_observacion: _contract.con_liquidacion_observacion,
+                con_estado: true,
+                emp_cedula: _contract.cont_emp.emp_cedula,
+                pue_id: _contract.cont_puest.pue_id
+            })
+                .then((response) => {
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+
+            getContracts()
             setContractDialog(false);
             setContract(emptyContract);
         }
@@ -103,7 +116,7 @@ const ContratRegister = () => {
     }
 
     const onEmployeeChange = (e) => {
-        console.log('d',e.value)
+        console.log('d', e.value)
         setContract({
             ...contract, cont_emp: {
                 emp_cedula: e.value
@@ -111,6 +124,22 @@ const ContratRegister = () => {
         });
 
     }
+
+    const onWorkstationChange = (e) => {
+        console.log('w', e.value)
+        setContract({
+            ...contract, cont_puest: {
+                pue_id: e.value
+            }
+        })
+
+    }
+
+    const onLiquidationChange = (e) => {
+        console.log('l', e.value)
+        const updatedContract = { ...contract, con_liquidacion_estado: e.target.value };
+        setContract(updatedContract);
+    };
 
     const deleteContract = () => {
         let _contracts = contracts.filter(val => val.id !== contract.id);
@@ -156,8 +185,24 @@ const ContratRegister = () => {
         setContract(_contract);
     }
 
+    const OonInputChange = (e, name) => {
+        console.log(e)
+
+        const val = (e.target && e.target.value) || '';
+        console.log('v', val)
+        const fecha = new Date(val);
+        let _contract = { ...contract };
+        _contract[`${name}`] = fecha.toISOString();
+
+        setContract(_contract);
+    }
+
+
+
+
 
     //Consumo de API
+    //--------------Contract------------------------
     const getContracts = async () => {
         const response = await axios.get(url);
 
@@ -165,11 +210,21 @@ const ContratRegister = () => {
         setContracts(response.data);
     }
 
+    //--------------Employees------------------------
     const getEmployees = async () => {
         const response = await axios.get('http://localhost:4000/nominaweb/api/v1/empleado/empleados');
 
         console.log('e', response.data)
         setEmployees(response.data);
+    }
+
+    //--------------Workstation-----------------------
+
+    const getWorkstation = async () => {
+        const response = await axios.get('http://localhost:4000/nominaweb/api/v1/puesto/pue');
+
+        console.log('w', response.data)
+        setWorkstation(response.data)
     }
 
 
@@ -180,6 +235,12 @@ const ContratRegister = () => {
     useEffect(() => {
         getEmployees();
     }, []);
+
+    useEffect(() => {
+        getWorkstation();
+    }, []);
+
+
 
 
     //components
@@ -225,6 +286,7 @@ const ContratRegister = () => {
         );
     };
 
+
     return (
         <div className="datatable-crud-demo">
 
@@ -237,23 +299,61 @@ const ContratRegister = () => {
                     header={header}>
                     <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                     <Column field="con_id" header="Code" sortable></Column>
-                    <Column field= {(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" sortable></Column>
+                    <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" sortable></Column>
                     <Column field="con_fecha_entrada" header="Fecha Entrada" sortable></Column>
                     <Column field="con_fecha_salida" header="Fecha Salida" sortable></Column>
                     <Column field="con_liquidacion_estado" header="Category" sortable></Column>
                     <Column body={actionBodyTemplate}></Column>
                 </DataTable>
             </div>
-            <Dialog visible={contractDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+            <Dialog visible={contractDialog} style={{
+                width: '450px'
+            }} header="Detalle Contrato" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                 <div className="p-field">
-                    <label htmlFor="name">Codigo Prueba</label>
-                    <InputText id="name" value={contract.con_id} onChange={(e) => onInputChange(e, 'con_id')} required autoFocus />
-                </div>
-                <div className="p-field">
-                    <label htmlFor="description">Seleccione Empleado</label>
-                    <Dropdown name="emp_cedula" value={contract.cont_emp.emp_cedula} onChange={onEmployeeChange} options={employees} optionLabel={(employees) => `${employees.emp_cedula} - ${employees.emp_nombres} ${employees.emp_apellidos}`} placeholder="Seleccione un empleado"
+                    <label htmlFor="employee">Seleccione Empleado</label>
+                    <Dropdown name="employee" value={contract.cont_emp.emp_cedula} onChange={onEmployeeChange} options={employees} optionLabel={(employees) => `${employees.emp_cedula} - ${employees.emp_nombres} ${employees.emp_apellidos}`} placeholder="Seleccione un empleado"
                         filter className="w-full md:w-14rem" optionValue="emp_cedula" />
                 </div>
+                <div className="p-field">
+                    <label htmlFor="workstation">Seleccione Empleado</label>
+                    <Dropdown name="workstation" value={contract.cont_puest.pue_id} onChange={onWorkstationChange} options={workstation} optionLabel={(workstation) => `${workstation.pue_nombre} - ${workstation.puest_cargo.car_nombre}`} placeholder="Seleccione un Puesto"
+                        filter className="w-full md:w-14rem" optionValue="pue_id" />
+                </div>
+
+
+                <div className="p-formgrid p-grid">
+                    <div className="p-field p-col">
+                        <label htmlFor="date">Fecha Inicio</label>
+                        <Calendar id="date" value={new Date(contract.con_fecha_entrada)} onChange={(e) => OonInputChange(e, 'con_fecha_entrada')} dateFormat="dd/mm/yy" />
+                    </div>
+                    <div className="p-field p-col">
+                        <label htmlFor="date">Fecha Salida</label>
+                        <Calendar id="date" value={new Date(contract.con_fecha_salida)} onChange={(e) => OonInputChange(e, 'con_fecha_salida')} dateFormat="dd/mm/yy" />
+                    </div>
+                </div>
+                <div className="p-field">
+                    <label htmlFor="liquidacion">Liquidacion</label>
+                    <div className="flex flex-wrap gap-3">
+                        <div className="flex align-items-center">
+                            <RadioButton inputId="liquidation1" name="true" value={true} onChange={onLiquidationChange} checked={contract.con_liquidacion_estado === true} />
+                            <label htmlFor="liquidation1" className="ml-2">Si</label>
+                        </div>
+                        <div className="flex align-items-center">
+                            <RadioButton inputId="liquidation1" name="false" value={false} onChange={onLiquidationChange} checked={contract.con_liquidacion_estado === false} />
+                            <label htmlFor="liquidation1" className="ml-2">No</label>
+                        </div>
+                        <div className="p-field p-col">
+                            <label htmlFor="date">Fecha Inicio</label>
+                            <Calendar id="date" value={new Date(contract.con_liquidacion_fecha)} onChange={(e) => OonInputChange(e, 'con_liquidacion_fecha')} dateFormat="dd/mm/yy" />
+                        </div>
+                    </div>
+                    <label htmlFor="description">Description</label>
+                    <InputTextarea id="description" value={contract.con_liquidacion_observacion} onChange={(e) => onInputChange(e, 'con_liquidacion_observacion')} required rows={3} cols={20} />
+
+
+                </div>
+
+
             </Dialog>
 
 

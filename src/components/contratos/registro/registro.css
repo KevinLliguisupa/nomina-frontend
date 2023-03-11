@@ -1,6 +1,63 @@
-.datatable-crud-demo  {
+.datatable-crud-demo .table-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
+.datatable-crud-demo .product-image {
+    width: 100px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.datatable-crud-demo .p-dialog .product-image {
+    width: 150px;
+    margin: 0 auto 2rem auto;
+    display: block;
+}
+
+.datatable-crud-demo .confirmation-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.p-grid {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -.5rem;
+    margin-left: -.5rem;
+    margin-top: -.5rem;
+}
+
+.p-field.p-grid,
+.p-formgrid.p-grid {
+    margin-top: 0;
+}
+
+.p-col {
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    padding: .5rem;
+}
+
+.flex {
+    display: flex!important;
+}
+
+.flex-wrap {
+    flex-wrap: wrap!important;
+}
+
+.gap-3 {
+    gap: 1rem!important;
+    row-gap: 1rem !important;
+    column-gap: 1rem !important;
+}
+
+.align-items-center {
+    align-items: center!important;
+}
