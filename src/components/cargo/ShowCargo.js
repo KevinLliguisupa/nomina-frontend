@@ -41,6 +41,7 @@ const ShowCargo = () => {
         }).catch(error => {
             console.log(error.message);
         });
+        
     };
 
     //Modal Crear
@@ -52,13 +53,7 @@ const ShowCargo = () => {
     //Abrir Modal Crear
     const handleShowcrear = () => setDialogcrear(true);
 
-    //Guardar o Salir Modal Crear
-    const footerContentCrear = (
-        <div>
-            <Button label="Cancelar" icon="pi pi-times" className="p-button-rounded p-button-danger p-button-text" onClick={handleClosecrear} />
-            <Button label="Crear" icon="pi pi-check" className="p-button-rounded p-button-text" onClick={() => { handleClosecrear(); PostCargo() }} autoFocus />
-        </div>
-    );
+
 
 
 
@@ -71,13 +66,18 @@ const ShowCargo = () => {
                 <Button icon="pi pi-plus" className="p-button-rounded p-button-success" onClick={handleShowcrear} />
 
 
-                <Dialog header="Nuevo Cargo" visible={dialogcrear} style={{width: '25vw'}}onHide={handleClosecrear} footer={footerContentCrear}>
-                    <label htmlFor="car_nombre">Cargo</label><br></br>
-                    <InputText  id="car_nombre" aria-describedby="car_nombre-help" value={cargonuevo} onChange={(e) => setCargonuevo(e.target.value)} /><br></br>
-                    <small id="car_nombre-help">
-                        Ingresa un nuevo Cargo
-                    </small>
+                <Dialog header="Nuevo Cargo" visible={dialogcrear} style={{ width: '25vw' }} onHide={handleClosecrear}>
+                    <form onSubmit={() => { handleClosecrear(); PostCargo() }}>
+                        <label htmlFor="car_nombre">Cargo</label><br></br>
+                        <InputText pattern="[a-zA-Z]+" required="true" id="car_nombre" aria-describedby="car_nombre-help" value={cargonuevo} onChange={(e) => setCargonuevo(e.target.value)}  /><br></br>
+                        <small id="car_nombre-help">
+                            Ingresa un nuevo Cargo
+                        </small>
+                        <Button label="Cancelar" icon="pi pi-times" className="p-button-rounded p-button-danger p-button-text" onClick={handleClosecrear} />
+                        <Button label="Crear" icon="pi pi-check" className="p-button-rounded p-button-text"/>
+                    </form>
                 </Dialog>
+
 
 
                 <DataTable value={cargo} responsiveLayout="scroll" >
