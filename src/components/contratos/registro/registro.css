@@ -45,19 +45,40 @@
 }
 
 .flex {
-    display: flex!important;
+    display: flex !important;
 }
 
 .flex-wrap {
-    flex-wrap: wrap!important;
+    flex-wrap: wrap !important;
 }
 
 .gap-3 {
-    gap: 1rem!important;
+    gap: 1rem !important;
     row-gap: 1rem !important;
     column-gap: 1rem !important;
 }
 
 .align-items-center {
-    align-items: center!important;
+    align-items: center !important;
+}
+
+.p-toolbar,
+.p-toolbar-group-left,
+.p-toolbar-group-right {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.p-button.p-button-success,
+.p-buttonset.p-button-success>.p-button,
+.p-splitbutton.p-button-success>.p-button {
+    color: #ffffff;
+    background: #689F38;
+    border: 1px solid #689F38;
+}
+
+.p-mr-2 {
+    margin-right: .5rem !important;
 }

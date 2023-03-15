@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { DataTable } from 'primereact/datatable';
 import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
-import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
+import { classNames } from 'primereact/utils';
 
 import './registro.css'
 
@@ -21,10 +20,10 @@ const ContratRegister = () => {
 
 
     const emptyContract = {
-        con_fecha_entrada: new Date(),
-        con_fecha_salida: new Date(),
-        con_liquidacion_estado: null,
-        con_liquidacion_fecha: new Date(),
+        con_fecha_entrada: new Date().toISOString(),
+        con_fecha_salida: new Date().toISOString(),
+        con_liquidacion_estado: false,
+        con_liquidacion_fecha: new Date().toISOString(),
         con_liquidacion_observacion: "",
         con_estado: true,
         cont_emp: {
@@ -44,6 +43,8 @@ const ContratRegister = () => {
     const [selectedContracts, setSelectedContracts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [edit, setEdit] = useState(false);
+    const toast = useRef(null);
 
     //employees
     const [employees, setEmployees] = useState({});
@@ -58,6 +59,7 @@ const ContratRegister = () => {
     const openNew = () => {
         setContract(emptyContract);
         setSubmitted(false);
+        setEdit(false);
         setContractDialog(true);
     }
 
@@ -77,11 +79,11 @@ const ContratRegister = () => {
     const saveContract = () => {
         setSubmitted(true);
 
-        if (contract.cont_emp.emp_cedula.trim()) {
+        if (contract.cont_emp.emp_cedula.trim()&&contract.cont_puest.pue_id.trim()) {
             let _contracts = [...contracts];
             let _contract = { ...contract };
 
-            axios.post('http://localhost:4000/nominaweb/api/v1/contrato/contratos', {
+            const datos = {
                 con_fecha_entrada: _contract.con_fecha_entrada,
                 con_fecha_salida: _contract.con_fecha_salida,
                 con_liquidacion_estado: _contract.con_liquidacion_estado,
@@ -90,24 +92,46 @@ const ContratRegister = () => {
                 con_estado: true,
                 emp_cedula: _contract.cont_emp.emp_cedula,
                 pue_id: _contract.cont_puest.pue_id
-            })
-                .then((response) => {
-                    console.log(response.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            };
 
-            getContracts()
+
+            if (edit) {
+                console.log('editar')
+                console.log(_contract)
+
+                axios.put(`http://localhost:4000/nominaweb/api/v1/contrato/contratos/${_contract.con_id}`, datos)
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Contract Updated', life: 3000 });
+
+
+            } else {
+                console.log('nuevo')
+                console.log(_contract)
+                axios.post('http://localhost:4000/nominaweb/api/v1/contrato/contratos', datos)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Contract Updated', life: 3000 });
+            }
+
             setContractDialog(false);
             setContract(emptyContract);
         }
+
     }
 
     const editContract = (contract) => {
         setContract({ ...contract });
         setContractDialog(true);
-        console.log(contract)
+        setEdit(true);
     }
 
     const confirmDeleteContract = (contract) => {
@@ -142,8 +166,15 @@ const ContratRegister = () => {
     };
 
     const deleteContract = () => {
-        let _contracts = contracts.filter(val => val.id !== contract.id);
-        setContracts(_contracts);
+        let _contract = { ...contract };
+
+        axios.put(`http://localhost:4000/nominaweb/api/v1/contrato/contrato/${_contract.con_id}`)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
         setdeleteContractDialog(false);
         setContract(emptyContract);
         // showToast('success', 'Product Deleted', 'Product has been deleted successfully.');
@@ -151,31 +182,14 @@ const ContratRegister = () => {
 
     const deleteSelectedContracts = () => {
         let _contracts = contracts.filter(val => !selectedContracts.includes(val));
+        console.log('el', _contracts);
         setContracts(_contracts);
         setDeleteContractsDialog(false);
         setSelectedContracts(null);
+
         // showToast('success', 'Products Deleted', 'Selected products have been deleted successfully.');
     }
 
-    const findIndexById = (id) => {
-        let index = -1;
-        for (let i = 0; i < contracts.length; i++) {
-            if (contracts[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-        return index;
-    }
-
-    const createId = () => {
-        let id = '';
-        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    }
 
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
@@ -264,18 +278,13 @@ const ContratRegister = () => {
             <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveContract} />
         </React.Fragment>
     );
-    const deleteProductDialogFooter = (
+    const deleteContractDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteContractDialog} />
             <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteContract} />
         </React.Fragment>
     );
-    const deleteProductsDialogFooter = (
-        <React.Fragment>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDelectedContractsDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedContracts} />
-        </React.Fragment>
-    );
+
     const actionBodyTemplate = (rowData) => {
         // Action body template logic
         return (
@@ -285,23 +294,23 @@ const ContratRegister = () => {
             </React.Fragment>
         );
     };
-
+   
 
     return (
         <div className="datatable-crud-demo">
 
-
+            <Toast ref={toast} />
             <div className="card">
                 <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar>
 
-                <DataTable value={contracts} selection={selectedContracts} onSelectionChange={(e) => setSelectedContracts(e.value)}
+                <DataTable value={contracts}  selection={selectedContracts}  onSelectionChange={(e) => setSelectedContracts(e.value)}
                     dataKey="con_id"
                     header={header}>
                     <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                     <Column field="con_id" header="Code" sortable></Column>
                     <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" sortable></Column>
                     <Column field="con_fecha_entrada" header="Fecha Entrada" sortable></Column>
-                    <Column field="con_fecha_salida" header="Fecha Salida" sortable></Column>
+                    <Column field="con_fecha_salida" header="Fecha Salida" dateFormat="dd/mm/yy" sortable></Column>
                     <Column field="con_liquidacion_estado" header="Category" sortable></Column>
                     <Column body={actionBodyTemplate}></Column>
                 </DataTable>
@@ -312,19 +321,21 @@ const ContratRegister = () => {
                 <div className="p-field">
                     <label htmlFor="employee">Seleccione Empleado</label>
                     <Dropdown name="employee" value={contract.cont_emp.emp_cedula} onChange={onEmployeeChange} options={employees} optionLabel={(employees) => `${employees.emp_cedula} - ${employees.emp_nombres} ${employees.emp_apellidos}`} placeholder="Seleccione un empleado"
-                        filter className="w-full md:w-14rem" optionValue="emp_cedula" />
+                        filter className={classNames({ 'p-invalid': submitted && !contract.cont_emp.emp_cedula })} optionValue="emp_cedula" />
+                    {submitted && !contract.cont_emp.emp_cedula && <small className="p-error">Cedula Requerida.</small>}
                 </div>
                 <div className="p-field">
                     <label htmlFor="workstation">Seleccione Empleado</label>
                     <Dropdown name="workstation" value={contract.cont_puest.pue_id} onChange={onWorkstationChange} options={workstation} optionLabel={(workstation) => `${workstation.pue_nombre} - ${workstation.puest_cargo.car_nombre}`} placeholder="Seleccione un Puesto"
-                        filter className="w-full md:w-14rem" optionValue="pue_id" />
+                        filter className={classNames({ 'p-invalid': submitted && !contract.cont_puest.pue_id })} optionValue="pue_id" />
+                    {submitted && !contract.cont_puest.pue_id && <small className="p-error">Puesto Requerido.</small>}
                 </div>
 
 
                 <div className="p-formgrid p-grid">
                     <div className="p-field p-col">
                         <label htmlFor="date">Fecha Inicio</label>
-                        <Calendar id="date" value={new Date(contract.con_fecha_entrada)} onChange={(e) => OonInputChange(e, 'con_fecha_entrada')} dateFormat="dd/mm/yy" />
+                        <Calendar id="date" value={new Date(contract.con_fecha_entrada)} onChange={(e) => OonInputChange(e, 'con_fecha_entrada')}  className={classNames({ 'p-invalid': submitted && !contract.cont_emp.emp_cedula })}dateFormat="dd/mm/yy" />
                     </div>
                     <div className="p-field p-col">
                         <label htmlFor="date">Fecha Salida</label>
@@ -354,6 +365,16 @@ const ContratRegister = () => {
                 </div>
 
 
+            </Dialog>
+            <Dialog visible={deleteContractDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteContractDialogFooter} onHide={hideDeleteContractDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    {contract && (
+                        <span>
+                            Are you sure you want to delete <b>{contract.cont_emp.emp_cedula}</b>?
+                        </span>
+                    )}
+                </div>
             </Dialog>
 
 
