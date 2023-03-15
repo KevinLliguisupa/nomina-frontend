@@ -11,6 +11,7 @@ import "./vendor/fontawesome-free/css/all.min.css";
 import { Helmet } from "react-helmet";
 import ListadoEmpleados from "./components/empleado/listado/listado";
 import CreacionEmpleado from "./components/empleado/creacion/creacionEmpleado";
+import CreacionInformacion from "./components/infoAdicional/creacion/creacionInfo";
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/contract" element={<ContratRegister />} />
                   <Route path='/empleados' element={<ListadoEmpleados />}></Route>
                   <Route path='/empleados/nuevo' element={<CreacionEmpleado />}></Route>
+                  <Route path='/informacion/nuevo' element={<CreacionInformacion/>}></Route>
                 </Routes>
               </div>
             </div>

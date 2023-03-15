@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-import { Steps } from 'primereact/steps'
-import { Toast } from 'primereact/toast';
+// import { Steps } from 'primereact/steps'
+// import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -53,7 +53,7 @@ const CreacionEmpleado = () => {
     const [emp_credencial120, setEmp_credencial120] = useState('');
     const [emp_reentrenado, setEmp_reentrenado] = useState('');
     const [emp_imagen, setEmp_imagen] = useState('');
-    const [emp_estado, setEmp_estado] = useState('');
+    // const [emp_estado, setEmp_estado] = useState('');
     const [niv_id, setNiv_id] = useState('');
     const [est_id, setEst_id] = useState('');
     const [ciu_nacimiento_id, setCiu_nacimiento_id] = useState('');

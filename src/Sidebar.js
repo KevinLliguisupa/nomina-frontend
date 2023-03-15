@@ -72,6 +72,13 @@ export default function Sidebar() {
                 </NavLink>
             </li >
 
+            < li className="nav-item" >
+                <NavLink className="nav-link" to='/informacion/nuevo' >
+                    <i className="fas fa-fw fa-cog"></i>
+                    <span>Crea Información</span>
+                </NavLink>
+            </li >
+
             {/* <!-- Nav Item - Charts --> */}
             < li className="nav-item" >
                 <a className="nav-link" href="charts.html">
