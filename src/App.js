@@ -34,15 +34,19 @@ function App() {
 
             {/* <!-- Main Content --> */}
             <Navbar />
-            <div id="content">
-              <div className="container">
-                <Routes>
-                  <Route path="/" element={<ShowProducts />} />
-                  <Route path="/contract" element={<ContratRegister />} />
-                  <Route path='/empleados' element={<ListadoEmpleados />}></Route>
-                  <Route path='/empleados/nuevo' element={<CreacionEmpleado />}></Route>
-                  <Route path='/informacion/nuevo' element={<CreacionInformacion/>}></Route>
-                </Routes>
+            {/* <div id="content">
+              <div className="container"> */}
+            <div class="content-body">
+              <div class="row page-titles mx-4">
+                <div class="container-fluid">
+                  <Routes>
+                    <Route path="/" element={<ShowProducts />} />
+                    <Route path="/contract" element={<ContratRegister />} />
+                    <Route path='/empleados' element={<ListadoEmpleados></ListadoEmpleados>}></Route>
+                    <Route path='/empleados/nuevo' element={<CreacionEmpleado />}></Route>
+                    <Route path='/informacion/nuevo' element={<CreacionInformacion />}></Route>
+                  </Routes>
+                </div>
               </div>
             </div>
             {/* <!-- End of Main Content --> */}
