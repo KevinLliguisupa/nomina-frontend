@@ -11,6 +11,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
+import { Tag } from 'primereact/tag';
 
 import './registro.css'
 
@@ -36,13 +37,12 @@ const ContratRegister = () => {
     }
 
     const [contracts, setContracts] = useState({});
+    const [contractsFilter, setContractsFilter] = useState({});
     const [contractDialog, setContractDialog] = useState(false);
     const [deleteContractDialog, setdeleteContractDialog] = useState(false);
-    const [deleteContractsDialog, setDeleteContractsDialog] = useState(false);
     const [contract, setContract] = useState(emptyContract);
     const [selectedContracts, setSelectedContracts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
-    const [globalFilter, setGlobalFilter] = useState(null);
     const [edit, setEdit] = useState(false);
     const toast = useRef(null);
 
@@ -52,9 +52,7 @@ const ContratRegister = () => {
     //workstation
     const [workstation, setWorkstation] = useState({});
 
-    function formatCurrency(value) {
-        return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
-    }
+
 
     const openNew = () => {
         setContract(emptyContract);
@@ -72,15 +70,13 @@ const ContratRegister = () => {
         setdeleteContractDialog(false);
     }
 
-    const hideDelectedContractsDialog = () => {
-        setDeleteContractsDialog(false);
-    }
+
 
     const saveContract = () => {
         setSubmitted(true);
 
-        if (contract.cont_emp.emp_cedula.trim()&&contract.cont_puest.pue_id.trim()) {
-            let _contracts = [...contracts];
+        if (contract.cont_emp.emp_cedula.trim()) {
+            console.log(contract.cont_emp.emp_cedula.trim());
             let _contract = { ...contract };
 
             const datos = {
@@ -180,15 +176,7 @@ const ContratRegister = () => {
         // showToast('success', 'Product Deleted', 'Product has been deleted successfully.');
     }
 
-    const deleteSelectedContracts = () => {
-        let _contracts = contracts.filter(val => !selectedContracts.includes(val));
-        console.log('el', _contracts);
-        setContracts(_contracts);
-        setDeleteContractsDialog(false);
-        setSelectedContracts(null);
 
-        // showToast('success', 'Products Deleted', 'Selected products have been deleted successfully.');
-    }
 
 
     const onInputChange = (e, name) => {
@@ -211,17 +199,52 @@ const ContratRegister = () => {
         setContract(_contract);
     }
 
+    const estadoLiquidacion = (contract) => {
+        if (contract.con_liquidacion_estado) {
+            return "Pagado"
+        } else {
+            return "No pagado"
+        }
+    }
+
+    const statusBodyTemplate = (rowData) => {
+        return <Tag value={estadoLiquidacion(rowData)} severity={getLiquidation(rowData)}></Tag>;
+    };
+
+
+    const getLiquidation = (contract) => {
+        switch (contract.con_liquidacion_estado) {
+            case true:
+                return 'success';
+
+            case false:
+                return 'danger';
+            default:
+                return null;
+        }
+    };
 
 
 
+
+    const [lazyParams, setLazyParams] = useState({
+        first: 0,
+        rows: 10,
+        page: 0,
+        sortField: null,
+        sortOrder: null,
+    })
 
     //Consumo de API
     //--------------Contract------------------------
     const getContracts = async () => {
-        const response = await axios.get(url);
-
-        console.log('c', response.data)
+        var consulta = "/pagination?page=" + lazyParams.page + "&size=" + lazyParams.rows;
+        console.log('contract')
+        const response = await axios.get(url + consulta);
+        console.log('c', response.data.content)
         setContracts(response.data);
+        setContractsFilter(response.data.content.filter(contractF => contractF.con_estado === true));
+
     }
 
     //--------------Employees------------------------
@@ -230,6 +253,7 @@ const ContratRegister = () => {
 
         console.log('e', response.data)
         setEmployees(response.data);
+
     }
 
     //--------------Workstation-----------------------
@@ -243,6 +267,7 @@ const ContratRegister = () => {
 
 
     useEffect(() => {
+        console.log('hola')
         getContracts();
     }, []);
 
@@ -294,7 +319,7 @@ const ContratRegister = () => {
             </React.Fragment>
         );
     };
-   
+
 
     return (
         <div className="datatable-crud-demo">
@@ -303,15 +328,14 @@ const ContratRegister = () => {
             <div className="card">
                 <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar>
 
-                <DataTable value={contracts}  selection={selectedContracts}  onSelectionChange={(e) => setSelectedContracts(e.value)}
+                <DataTable value={contractsFilter} selection={selectedContracts} onSelectionChange={(e) => setSelectedContracts(e.value)}
                     dataKey="con_id"
                     header={header}>
-                    <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                     <Column field="con_id" header="Code" sortable></Column>
-                    <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" sortable></Column>
-                    <Column field="con_fecha_entrada" header="Fecha Entrada" sortable></Column>
+                    <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" headerClassName="text-center" ></Column>
+                    <Column field="con_fecha_entrada" header="Fecha Entrada" headerClassName="text-center" sortable></Column>
                     <Column field="con_fecha_salida" header="Fecha Salida" dateFormat="dd/mm/yy" sortable></Column>
-                    <Column field="con_liquidacion_estado" header="Category" sortable></Column>
+                    <Column field="con_liquidacion_estado" header="Liquidacion" body={statusBodyTemplate} sortable></Column>
                     <Column body={actionBodyTemplate}></Column>
                 </DataTable>
             </div>
@@ -335,7 +359,7 @@ const ContratRegister = () => {
                 <div className="p-formgrid p-grid">
                     <div className="p-field p-col">
                         <label htmlFor="date">Fecha Inicio</label>
-                        <Calendar id="date" value={new Date(contract.con_fecha_entrada)} onChange={(e) => OonInputChange(e, 'con_fecha_entrada')}  className={classNames({ 'p-invalid': submitted && !contract.cont_emp.emp_cedula })}dateFormat="dd/mm/yy" />
+                        <Calendar id="date" value={new Date(contract.con_fecha_entrada)} onChange={(e) => OonInputChange(e, 'con_fecha_entrada')} className={classNames({ 'p-invalid': submitted && !contract.cont_emp.emp_cedula })} dateFormat="dd/mm/yy" />
                     </div>
                     <div className="p-field p-col">
                         <label htmlFor="date">Fecha Salida</label>
@@ -354,7 +378,7 @@ const ContratRegister = () => {
                             <label htmlFor="liquidation1" className="ml-2">No</label>
                         </div>
                         <div className="p-field p-col">
-                            <label htmlFor="date">Fecha Inicio</label>
+                            <label htmlFor="date">Fecha Liquidación</label>
                             <Calendar id="date" value={new Date(contract.con_liquidacion_fecha)} onChange={(e) => OonInputChange(e, 'con_liquidacion_fecha')} dateFormat="dd/mm/yy" />
                         </div>
                     </div>
@@ -366,6 +390,7 @@ const ContratRegister = () => {
 
 
             </Dialog>
+
             <Dialog visible={deleteContractDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteContractDialogFooter} onHide={hideDeleteContractDialog}>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
