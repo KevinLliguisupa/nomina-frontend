@@ -17,7 +17,7 @@ import './registro.css'
 
 const ContratRegister = () => {
 
-    const url = 'http://localhost:4000/nominaweb/api/v1/contrato/contratos';
+    const url = 'http://localhost:4000/nominaweb/api/v1/contrato';
 
 
     const emptyContract = {
@@ -37,14 +37,15 @@ const ContratRegister = () => {
     }
 
     const [contracts, setContracts] = useState({});
-    const [contractsFilter, setContractsFilter] = useState({});
+    const [contractsFilter, setContractsFilter] = useState([]);
     const [contractDialog, setContractDialog] = useState(false);
     const [deleteContractDialog, setdeleteContractDialog] = useState(false);
     const [contract, setContract] = useState(emptyContract);
-    const [selectedContracts, setSelectedContracts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [edit, setEdit] = useState(false);
     const toast = useRef(null);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     //employees
     const [employees, setEmployees] = useState({});
@@ -233,18 +234,64 @@ const ContratRegister = () => {
         page: 0,
         sortField: null,
         sortOrder: null,
-    })
+        filters: {
+            'estado': { value: null, matchMode: 'contains' },
+            'contractId': { value: '', matchMode: 'contains' },
+            'fechaE': { value: '', matchMode: 'contains' },
+            'fechaS': { value: '', matchMode: 'contains' },
+            'liquidacionEstado': { value: '', matchMode: 'contains' },
+            'fechaL': { value: '', matchMode: 'contains' },
+            'liquidacionOb': { value: '', matchMode: 'contains' },
+            'cedulaEmpleado': { value: '', matchMode: 'contains' },
+            'puesto': { value: '', matchMode: 'contains' }
+        }
+    });
+    useEffect(() => {
+        console.log('hola')
+        getContracts();
+    }, [lazyParams]);
 
     //Consumo de API
     //--------------Contract------------------------
     const getContracts = async () => {
         var consulta = "/pagination?page=" + lazyParams.page + "&size=" + lazyParams.rows;
+
+        if (lazyParams.filters.estado.value !== '' && lazyParams.filters.estado.value !== null) {
+            consulta += "&estado" + lazyParams.filters.estado.value
+        }
+        if (lazyParams.filters.contractId.value !== '' && lazyParams.filters.contractId.value !== null) {
+            consulta += "&contractId" + lazyParams.filters.contractId.value
+        }
+        if (lazyParams.filters.fechaE.value !== '' && lazyParams.filters.fechaE.value !== null) {
+            consulta += "&fechaE" + lazyParams.filters.fechaE.value
+        }
+        if (lazyParams.filters.fechaS.value !== '' && lazyParams.filters.fechaS.value !== null) {
+            consulta += "&fechaS" + lazyParams.filters.fechaS.value
+        }
+        if (lazyParams.filters.liquidacionEstado.value !== '' && lazyParams.filters.liquidacionEstado.value !== null) {
+            consulta += "&liquidacionEstado" + lazyParams.filters.liquidacionEstado.value
+        }
+        if (lazyParams.filters.fechaL.value !== '' && lazyParams.filters.fechaL.value !== null) {
+            consulta += "&fechaL" + lazyParams.filters.fechaL.value
+        }
+        if (lazyParams.filters.liquidacionOb.value !== '' && lazyParams.filters.liquidacionOb.value !== null) {
+            consulta += "&liquidacionOb" + lazyParams.filters.liquidacionOb.value
+        }
+        if (lazyParams.filters.cedulaEmpleado.value !== '' && lazyParams.filters.cedulaEmpleado.value !== null) {
+            consulta += "&cedulaEmpleado" + lazyParams.filters.cedulaEmpleado.value
+        }
+        if (lazyParams.filters.puesto.value !== '' && lazyParams.filters.puesto.value !== null) {
+            consulta += "&puesto" + lazyParams.filters.puesto.value
+        }
+
         console.log('contract')
+        setLoading(true);
         const response = await axios.get(url + consulta);
         console.log('c', response.data.content)
         setContracts(response.data);
-        setContractsFilter(response.data.content.filter(contractF => contractF.con_estado === true));
-
+        setTotalRecords(response.data.pagination.totalElements);
+        setContractsFilter(response.data.content);
+        setLoading(false);
     }
 
     //--------------Employees------------------------
@@ -266,10 +313,7 @@ const ContratRegister = () => {
     }
 
 
-    useEffect(() => {
-        console.log('hola')
-        getContracts();
-    }, []);
+
 
     useEffect(() => {
         getEmployees();
@@ -287,8 +331,7 @@ const ContratRegister = () => {
 
     const leftToolbarTemplate = (
         <React.Fragment>
-            <Button label="New" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
-            <Button label="Delete" icon="pi pi-trash" className="p-button-danger" />
+            <Button label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
         </React.Fragment>
     )
 
@@ -320,16 +363,32 @@ const ContratRegister = () => {
         );
     };
 
+    const onPage = (event) => {
+        console.log('eve', event)
+        setLazyParams(event);
+    }
+    const onFilter = (event) => {
+        event['first'] = 0;
+        event.page = 0
+        console.log(event)
+        setLazyParams(event);
+    }
+
 
     return (
-        <div className="datatable-crud-demo">
+        <div className="datatable-filter-demo">
 
             <Toast ref={toast} />
             <div className="card">
                 <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar>
 
-                <DataTable value={contractsFilter} selection={selectedContracts} onSelectionChange={(e) => setSelectedContracts(e.value)}
+                <DataTable value={contractsFilter}
                     dataKey="con_id"
+                    lazy first={lazyParams.first} totalRecords={totalRecords} onPage={onPage}
+                    paginator rows={lazyParams.rows} className="p-datatable-customers" loading={loading}
+                    filterDisplay="row" showGridlines responsiveLayout="scroll" emptyMessage="No se encontro información."
+                    rowsPerPageOptions={[5, 10, 20, 50]} filters={lazyParams.filters} onFilter={onFilter}
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                     header={header}>
                     <Column field="con_id" header="Code" sortable></Column>
                     <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" headerClassName="text-center" ></Column>
