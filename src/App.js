@@ -11,6 +11,7 @@ import "./vendor/fontawesome-free/css/all.min.css";
 import { Helmet } from "react-helmet";
 import ListadoEmpleados from "./components/empleado/listado/listado";
 import Creacion from "./components/empleado/CreacionEmpleado/CreacionEmpleado";
+import ActualizacionEmpleado from "./components/empleado/Actualizacion/Actualizacion";
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
                     <Route path='/empleados' element={<ListadoEmpleados></ListadoEmpleados>}></Route>
                     {/* <Route path='/empleados/nuevo' element={<CreacionEmpleado />}></Route> */}
                     <Route path='/empleados/creacion' element={<Creacion />}></Route>
+                    <Route path='/empleados/actualizacion/:cedula' component={ActualizacionEmpleado} element={<ActualizacionEmpleado />}></Route>
                     {/* <Route path='/informacion/nuevo' element={<CreacionInformacion />}></Route> */}
                   </Routes>
                 </div>

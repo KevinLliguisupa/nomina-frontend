@@ -8,6 +8,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressBar } from 'primereact/progressbar';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 
 import "./listado.css"
 
@@ -41,6 +42,9 @@ const ListadoEmpleados = () => {
         }
     ];
 
+    function click(cedula) {
+        console.log(cedula);
+      }
 
     const niveles = [
         {
@@ -96,7 +100,7 @@ const ListadoEmpleados = () => {
         }
         if (lazyParams.filters.nombre.value !== '' && lazyParams.filters.nombre.value !== null) {
             consulta += "&nombre=" + lazyParams.filters.nombre.value
-        }        
+        }
         if (lazyParams.filters.estado.value !== '' && lazyParams.filters.estado.value !== null) {
             consulta += "&estado=" + lazyParams.filters.estado.value
         }
@@ -133,18 +137,24 @@ const ListadoEmpleados = () => {
     const verifiedBodyTemplate = (rowData) => {
         // className={`customer-badge status-${option}`}
 
-        return <i className={ classNames(`pi customer-badge status-${rowData.emp_estado_nombre}`, { 'true-icon pi-check-circle': rowData.emp_estado, 'false-icon pi-times-circle': !rowData.emp_estado })
-    }></i>;
+        return <i className={classNames(`pi customer-badge status-${rowData.emp_estado_nombre}`, { 'true-icon pi-check-circle': rowData.emp_estado, 'false-icon pi-times-circle': !rowData.emp_estado })
+        }></i>;
     };
 
 
     const actionBodyTemplate = (rowData) => {
+        // console.log(rowData)
+        var ruta = "/empleados/actualizacion/" + rowData.emp_cedula
         // Action body template logic
         return (
             <React.Fragment>
                 {/* onClick={() => editContract(rowData)}  */}
-                <Button icon="pi pi-pencil" className="botones p-button-rounded p-button-success p-mr-2"
-                />
+
+                <Link to={ruta}>
+                    <Button icon="pi pi-pencil" className="botones p-button-rounded p-button-success p-mr-2" 
+                    />
+                </Link>
+
                 {/* onClick={() => confirmDeleteContract(rowData)}  */}
                 <Button icon="pi pi-trash" className="botones p-button-rounded p-button-warning"
                 />
@@ -167,9 +177,9 @@ const ListadoEmpleados = () => {
 
 
     const nivelRowFilterTemplate = (options) => {
-            return <Dropdown value={options.value} optionValue="niv_id" options={niveles} onChange={(e) => options.filterApplyCallback(e.value)} 
-            optionLabel="niv_descripcion" 
-            placeholder="Nivel"/>
+        return <Dropdown value={options.value} optionValue="niv_id" options={niveles} onChange={(e) => options.filterApplyCallback(e.value)}
+            optionLabel="niv_descripcion"
+            placeholder="Nivel" />
     }
 
     const header1 = renderHeader2();
@@ -218,8 +228,8 @@ const ListadoEmpleados = () => {
                     // style={{ minWidth: '8rem' }} 
 
                     />
-                    <Column field="emp_direccion" header="Dirección" filter filterPlaceholder="Lugar..." showFilterMenu={false} 
-                    filterField="direccion"
+                    <Column field="emp_direccion" header="Dirección" filter filterPlaceholder="Lugar..." showFilterMenu={false}
+                        filterField="direccion"
                     // style={{ minWidth: '12rem' }} 
 
                     />

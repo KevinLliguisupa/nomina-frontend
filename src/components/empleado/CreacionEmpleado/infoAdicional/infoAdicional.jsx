@@ -100,18 +100,61 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
 
     return (
         <div className="card inputs">
-
-
             <div class="row">
                 <div class="col">
                     <div>
                         <label htmlFor="historialLaboral">Historial laboral</label>
                     </div>
-                    <InputMask id="historialLaboral" mask="99/99/9999" value={inf_historial_laboral} placeholder="99/99/9999" slotChar="mm/dd/yyyy"
+                    <InputMask id="historialLaboral" mask="9999/99/99" value={inf_historial_laboral} placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd"
                         onChange={(e) => setInf_historial_laboral(e.value)}></InputMask>
                 </div>
 
                 <div class="col">
+                    <div>
+                        <label htmlFor="ieesSalida">Salida IESS</label>
+                    </div>
+                    <InputMask id="ieesSalida" mask="9999/99/99" value={inf_iees_salida} placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd"
+                        onChange={(e) => setInf_iees_salida(e.value)}></InputMask>
+                </div>
+
+                <div class="col">
+                    <div>
+                        <label htmlFor="poliza">Póliza</label>
+                    </div>
+                    <InputMask id="poliza" mask="9999/99/99" value={inf_poliza} placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd"
+                        onChange={(e) => setInf_poliza(e.value)}></InputMask>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <label htmlFor="certantecedentes">Certificado de antecedentes penales</label>
+                    </div>
+                    <InputMask id="certantecedentes" mask="9999/99/99" value={inf_certantecedentes} placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd"
+                        onChange={(e) => setInf_certantecedentes(e.value)}></InputMask>
+                </div>
+
+                <div class="col">
+                    <div>
+                        <label htmlFor="certmedico">Certificado médico (MSP)</label>
+                    </div>
+                    <InputMask id="certmedico" mask="9999/99/99" value={inf_certmedico_msp} placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd"
+                        onChange={(e) => setInf_certmedico_msp(e.value)}></InputMask>
+
+                </div>
+
+                <div class="col">
+                    <div>
+                        <label htmlFor="certpsicologico">Certificado psicológico</label>
+                    </div>
+                    <InputMask id="certpsicologico" mask="9999/99/99" value={inf_certpsicologico} placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd"
+                        onChange={(e) => setInf_certpsicologico(e.value)}></InputMask>
+                </div>
+            </div>
+
+            <div class="row">
+            <div class="col">
                     <div>
                         <label htmlFor="experiencia">Experiencia laboral </label>
                     </div>
@@ -126,58 +169,13 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                     <InputNumber inputId="minmax-buttons" value={inf_referencias_laborales}
                         onValueChange={(e) => setInf_referencias_laborales(e.value)} showButtons min={0} max={100} />
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col">
-                    <div>
-                        <label htmlFor="certantecedentes">Certificado de antecedentes penales</label>
-                    </div>
-                    <InputMask id="certantecedentes" mask="99/99/9999" value={inf_certantecedentes} placeholder="99/99/9999" slotChar="mm/dd/yyyy"
-                        onChange={(e) => setInf_certantecedentes(e.value)}></InputMask>
-                </div>
-
-                <div class="col">
-                    <div>
-                        <label htmlFor="certmedico">Certificado médico (MSP)</label>
-                    </div>
-                    <InputMask id="certmedico" mask="99/99/9999" value={inf_certmedico_msp} placeholder="99/99/9999" slotChar="mm/dd/yyyy"
-                        onChange={(e) => setInf_certmedico_msp(e.value)}></InputMask>
-
-                </div>
-
-                <div class="col">
-                    <div>
-                        <label htmlFor="certpsicologico">Certificado psicológico</label>
-                    </div>
-                    <InputMask id="certpsicologico" mask="99/99/9999" value={inf_certpsicologico} placeholder="99/99/9999" slotChar="mm/dd/yyyy"
-                        onChange={(e) => setInf_certpsicologico(e.value)}></InputMask>
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="col">
                     <div>
                         <label htmlFor="cargasFamiliares">Número de cargas familiares</label>
                     </div>
                     <InputNumber inputId="minmax-buttons" value={inf_cargas_familiares}
                         onValueChange={(e) => setInf_cargas_familiares(e.value)} showButtons min={0} max={100} />
-                </div>
-
-                <div class="col">
-                    <div>
-                        <label htmlFor="ieesSalida">Salida IESS</label>
-                    </div>
-                    <InputMask id="ieesSalida" mask="99/99/9999" value={inf_iees_salida} placeholder="99/99/9999" slotChar="mm/dd/yyyy"
-                        onChange={(e) => setInf_iees_salida(e.value)}></InputMask>
-                </div>
-
-                <div class="col">
-                    <div>
-                        <label htmlFor="poliza">Póliza</label>
-                    </div>
-                    <InputMask id="poliza" mask="99/99/9999" value={inf_poliza} placeholder="99/99/9999" slotChar="mm/dd/yyyy"
-                        onChange={(e) => setInf_poliza(e.value)}></InputMask>
                 </div>
             </div>
 
@@ -293,10 +291,11 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
 
                 </div>
             </div>
-
-            {/* <Button label="Submit" icon="pi pi-check" onClick={crearInformacion} /> */}
+            <div>
             <Button label="Anterior" icon="pi pi-angle-left" onClick={onAnterior} />
             <Button label="Siguiente" icon="pi pi-angle-right" onClick={handleSiguiente} />
+            </div>
+            {/* <Button label="Submit" icon="pi pi-check" onClick={crearInformacion} /> */}
         </div>
     )
 }

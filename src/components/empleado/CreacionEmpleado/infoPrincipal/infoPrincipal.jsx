@@ -97,12 +97,11 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
             niv_id: niv_id,
             est_id: est_id,
         }
-        onSiguiente({infoEmpleado:nuevoEmpleado});
-      };
+        onSiguiente({ infoEmpleado: nuevoEmpleado });
+    };
 
     return (
         <div className="card inputs">
-
             <div class="row">
                 <div class="col">
                     <div>
@@ -111,7 +110,6 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     <InputText id="cedula"
                         value={emp_cedula} onChange={(e) => setEmp_cedula(e.target.value)} />
                 </div>
-
                 <div class="col">
                     <div>
                         <label htmlFor="apellidos">Apellidos</label>
@@ -119,7 +117,6 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     <InputText id="apellidos"
                         value={emp_apellidos} onChange={(e) => setEmp_apellidos(e.target.value)} />
                 </div>
-
                 <div class="col">
                     <div>
                         <label htmlFor="nombres">Nombres</label>
@@ -137,7 +134,6 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     <InputText id="celular"
                         value={emp_celular} onChange={(e) => setEmp_celular(e.target.value)} />
                 </div>
-
                 <div class="col">
                     <div>
                         <label htmlFor="email">Correo electrónico</label>
@@ -145,7 +141,6 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     <InputText id="email"
                         value={emp_email} onChange={(e) => setEmp_email(e.target.value)} />
                 </div>
-
                 <div class="col">
                     <div>
                         <label htmlFor="direccion">Dirección</label>
@@ -206,7 +201,6 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
             <div class="row">
                 <div class="col">
                     <div>
-
                         <label htmlFor="discapacidad">Discapacidad</label>
                     </div>
 
@@ -214,26 +208,31 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                 </div>
                 <div class="col">
                     <div>
-
                         <label htmlFor="credencial120">Credencial 120 horas</label>
                     </div>
                     <InputSwitch checked={emp_credencial120} onChange={(e) => setEmp_credencial120(e.value)} />
                 </div>
                 <div class="col">
                     <div>
-
                         <label htmlFor="reentrenado">Reentrenado</label>
                     </div>
                     <InputSwitch checked={emp_reentrenado} onChange={(e) => setEmp_reentrenado(e.value)} />
                 </div>
             </div>
-
-            <label htmlFor="cursos">Cursos</label>
-            <InputTextarea id="cursos" aria-describedby="cursos-help" rows={5} cols={30}
-                value={emp_cursos} onChange={(e) => setEmp_cursos(e.target.value)} />
+            <div class="row">
+                <div>
+                    <label htmlFor="cursos">Cursos</label>
+                </div>
+                <div>
+                <InputTextarea id="cursos" aria-describedby="cursos-help" rows={4} cols={120}
+                    value={emp_cursos} onChange={(e) => setEmp_cursos(e.target.value)} />
+                </div>
+            </div>
 
             {/* <Button label="Submit" icon="pi pi-check" onClick={crearEmpleado} /> */}
-            <Button label="Submit" icon="pi pi-check" onClick={handleSiguiente} />
+            <div>
+                <Button label="Submit" icon="pi pi-check" onClick={handleSiguiente} />
+            </div>
 
         </div>
     );

@@ -66,7 +66,7 @@ export default function Sidebar() {
             </li >
 
             < li className="nav-item" >
-                <NavLink className="nav-link" to='/empleados/nuevo' >
+                <NavLink className="nav-link" to='/empleados/creacion' >
                     <i className="fas fa-fw fa-cog"></i>
                     <span>Crear</span>
                 </NavLink>
