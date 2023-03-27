@@ -9,6 +9,8 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressBar } from 'primereact/progressbar';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { Dialog } from 'primereact/dialog';
+
 
 import "./listado.css"
 
@@ -22,7 +24,61 @@ const ListadoEmpleados = () => {
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [totalRecords, setTotalRecords] = useState(0);
     const [loading, setLoading] = useState(false);
-
+    const [displayBasic, setDisplayBasic] = useState(false);
+    const [position, setPosition] = useState('center');
+    const [infoAdicional, setinfoAdicional] = useState({
+        emp_cedula: "",
+        inf_acta_finiquito: false,
+        inf_afi: false,
+        inf_canet_covid: false,
+        inf_cargas_familiares: 0,
+        inf_certantecedentes: "",
+        inf_certificados_laborales: false,
+        inf_certmedico_msp: "",
+        inf_certpsicologico: "",
+        inf_copia_cedula: false,
+        inf_copia_papeleta: false,
+        inf_experiencia: "",
+        inf_foto: false,
+        inf_historial_laboral: "",
+        inf_hoja_datos: false,
+        inf_hoja_vida: false,
+        inf_iees_salida: "",
+        inf_iess_entrada: false,
+        inf_libreta_militar: false,
+        inf_mrl: false,
+        inf_poliza: "",
+        inf_referencias_laborales: 0,
+        inf_sicosep: false
+    })
+    const [empleado, setEmpleado] = useState({
+        emp_apellidos: "",
+        emp_cedula: "",
+        emp_celular: "",
+        emp_credencial120: false,
+        emp_cursos: "",
+        emp_direccion: "",
+        emp_discapacidad: false,
+        emp_email: "",
+        emp_estado: true,
+        emp_lugar_nacimiento: "",
+        emp_nombres: "",
+        emp_reentrenado: false,
+        emp_sexo: null,
+        emp_estadoCivil: {
+            est_id: 1,
+            est_descipcion: ""
+        },
+        emp_nivel: {
+            niv_id: 0,
+            niv_descripcion: ""
+        },
+        emp_ciudadNacimiento: {
+            ciu_id: "",
+            ciu_nombre: "",
+        }
+    });
+    const [empleadoDialog, setEmpleadoDialog] = useState(false);
     const [filters2, setFilters2] = useState({
         'global': { value: null },
         'name': { value: null },
@@ -42,9 +98,13 @@ const ListadoEmpleados = () => {
         }
     ];
 
+    const dialogFuncMap = {
+        'displayBasic': setDisplayBasic
+    }
+
     function click(cedula) {
         console.log(cedula);
-      }
+    }
 
     const niveles = [
         {
@@ -90,6 +150,34 @@ const ListadoEmpleados = () => {
     useEffect(() => {
         getEmpleados();
     }, [lazyParams]);
+
+    var empleadoVacio = {
+        emp_apellidos: "",
+        emp_cedula: "",
+        emp_celular: "",
+        emp_credencial120: false,
+        emp_cursos: "",
+        emp_direccion: "",
+        emp_discapacidad: false,
+        emp_email: "",
+        emp_estado: true,
+        emp_lugar_nacimiento: "",
+        emp_nombres: "",
+        emp_reentrenado: false,
+        emp_sexo: null,
+        emp_estadoCivil: {
+            est_id: 1,
+            est_descipcion: ""
+        },
+        emp_nivel: {
+            niv_id: 0,
+            niv_descripcion: ""
+        },
+        emp_ciudadNacimiento: {
+            ciu_id: "",
+            ciu_nombre: "",
+        }
+    }
 
 
     const getEmpleados = async () => {
@@ -141,6 +229,17 @@ const ListadoEmpleados = () => {
         }></i>;
     };
 
+    const verEmpleado = async (empleadoSelect) => {
+        setEmpleado(empleadoSelect);
+        setDisplayBasic(true);
+        console.log(empleadoSelect)
+
+        const dataAdicional = await axios.get("http://localhost:4000/nominaweb/api/v1/informacion/cedula/" + empleadoSelect.emp_cedula)
+
+        console.log(dataAdicional.data)
+        setinfoAdicional(dataAdicional.data)
+    }
+
 
     const actionBodyTemplate = (rowData) => {
         // console.log(rowData)
@@ -150,8 +249,11 @@ const ListadoEmpleados = () => {
             <React.Fragment>
                 {/* onClick={() => editContract(rowData)}  */}
 
+                <Button icon="pi pi-eye" className="botones p-button-rounded p-button-primary" onClick={() => verEmpleado(rowData)}
+                />
+
                 <Link to={ruta}>
-                    <Button icon="pi pi-pencil" className="botones p-button-rounded p-button-success p-mr-2" 
+                    <Button icon="pi pi-pencil" className="botones p-button-rounded p-button-success p-mr-2"
                     />
                 </Link>
 
@@ -195,6 +297,30 @@ const ListadoEmpleados = () => {
         console.log(event)
         setLazyParams(event);
 
+    }
+
+    const renderFooter = (name) => {
+        return (
+            <div>
+                <Button label="No" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
+                {/* <Button label="Yes" icon="pi pi-check" onClick={() => onHide(name)} autoFocus /> */}
+            </div>
+        );
+    }
+    const onClick = (name, position) => {
+        dialogFuncMap[`${name}`](true);
+
+        if (position) {
+            setPosition(position);
+        }
+    }
+
+    const onHide = (name) => {
+        dialogFuncMap[`${name}`](false);
+    }
+
+    const cambiarBoolean = (datoBoolean) => {
+        return (datoBoolean ? "Si" : "No");
     }
 
     return (
@@ -251,6 +377,55 @@ const ListadoEmpleados = () => {
                     <Column header="Opciones" filter filterElement={header1} showFilterMenu={false} body={actionBodyTemplate} style={{ minWidth: '8rem' }} />
                 </DataTable>
             </div>
+
+            <h5>Basic</h5>
+
+            <Button label="Show" icon="pi pi-external-link" onClick={() => onClick('displayBasic')} />
+            <Dialog header="Header" visible={displayBasic} style={{ width: '50vw' }} footer={renderFooter('displayBasic')} onHide={() => onHide('displayBasic')}>
+                <p>{empleado.emp_cedula}</p>
+                <p>{empleado.emp_apellidos}</p>
+                <p>{empleado.emp_nombres}</p>
+                <p>{empleado.emp_celular}</p>
+                <p>{empleado.emp_email}</p>
+                <p>{empleado.emp_cursos}</p>
+                <p>{empleado.emp_direccion}</p>
+                <p>{empleado.emp_lugar_nacimiento}</p>
+                <p>{empleado.emp_sexo}</p>
+                <p>{empleado.emp_estado}</p>
+                <p>{empleado.emp_nivel.niv_descripcion}</p>
+                <p>{empleado.emp_estadoCivil.est_descipcion}</p>
+                <p>{empleado.emp_ciudadNacimiento.ciu_nombre}</p>
+                <p>{cambiarBoolean(empleado.emp_discapacidad)}</p>
+                <p>{cambiarBoolean(empleado.emp_credencial120)}</p>
+                <p>{cambiarBoolean(empleado.emp_reentrenado)}</p>
+                <p>{empleado.emp_estado_nombre}</p>
+
+                <h3>Informacion Adicional</h3>
+                <p>{cambiarBoolean(infoAdicional.inf_acta_finiquito)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_afi)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_canet_covid)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_certificados_laborales)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_copia_cedula)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_copia_papeleta)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_foto)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_hoja_datos)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_hoja_vida)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_iess_entrada)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_libreta_militar)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_mrl)}</p>
+                <p>{cambiarBoolean(infoAdicional.inf_sicosep)}</p>
+                <p>{infoAdicional.inf_historial_laboral}</p>
+                <p>{infoAdicional.inf_experiencia}</p>
+                <p>{infoAdicional.inf_referencias_laborales}</p>
+                <p>{infoAdicional.inf_certantecedentes}</p>
+                <p>{infoAdicional.inf_certmedico_msp}</p>
+                <p>{infoAdicional.inf_certpsicologico}</p>
+                <p>{infoAdicional.inf_cargas_familiares}</p>
+                <p>{infoAdicional.inf_iees_salida}</p>
+                <p>{infoAdicional.inf_poliza}</p>
+
+            </Dialog>
+
         </div>
     );
 }
