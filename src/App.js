@@ -2,13 +2,13 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Routes, Route } from 'react-router-dom';
 import ShowProducts from './components/Pruebas/productos/ShowProducts'
-import ContratRegister from './components/contratos/registro/registro.jsx';
+import ContratRegister from './components/contratos/registro/registros.jsx';
 import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
 import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";
 import "./css/sb-admin-2.min.css";
 import "./vendor/fontawesome-free/css/all.min.css";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import ListadoEmpleados from "./components/empleado/listado/listado";
 import Creacion from "./components/empleado/CreacionEmpleado/CreacionEmpleado";
 import ActualizacionEmpleado from "./components/empleado/Actualizacion/Actualizacion";
@@ -16,6 +16,7 @@ import ActualizacionEmpleado from "./components/empleado/Actualizacion/Actualiza
 
 function App() {
   return (
+    <HelmetProvider>
     <>
       <Helmet>
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -26,7 +27,7 @@ function App() {
         {/* <!-- Custom styles for this template--> */}
         <link href="css/sb-admin-2.min.css" rel="stylesheet" />
       </Helmet>
-      <body id="page-top">
+     
         <div id="wrapper">
           <Sidebar />
           {/* <!-- Content Wrapper --> */}
@@ -36,9 +37,9 @@ function App() {
             <Navbar />
             {/* <div id="content">
               <div className="container"> */}
-            <div class="content-body">
-              <div class="row page-titles mx-4">
-                <div class="container-fluid">
+            <div className="content-body">
+              <div className="row page-titles mx-4">
+                <div className="container-fluid">
                   <Routes>
                     <Route path="/" element={<ShowProducts />} />
                     <Route path="/contract" element={<ContratRegister />} />
@@ -81,8 +82,9 @@ function App() {
         {/* <!-- Page level custom scripts --> */}
         <script src="js/demo/chart-area-demo.js"></script>
         <script src="js/demo/chart-pie-demo.js"></script>
-      </body>
+    
     </>
+    </HelmetProvider>
   )
 }
 

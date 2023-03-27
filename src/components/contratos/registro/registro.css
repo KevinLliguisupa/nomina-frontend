@@ -1,5 +1,145 @@
-.datatable-crud-demo  {
+.datatable-crud-demo .table-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.datatable-crud-demo .product-image {
+    width: 100px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.datatable-crud-demo .p-dialog .product-image {
+    width: 150px;
+    margin: 0 auto 2rem auto;
+    display: block;
+}
+
+.datatable-crud-demo .confirmation-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.p-grid {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -.5rem;
+    margin-left: -.5rem;
+    margin-top: -.5rem;
+}
+
+.p-field.p-grid,
+.p-formgrid.p-grid {
+    margin-top: 0;
+}
+
+.p-col {
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    padding: .5rem;
+}
+
+.flex {
+    display: flex !important;
+}
+
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+.gap-3 {
+    gap: 1rem !important;
+    row-gap: 1rem !important;
+    column-gap: 1rem !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.p-toolbar,
+.p-toolbar-group-left,
+.p-toolbar-group-right {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.p-button.p-button-success,
+.p-buttonset.p-button-success>.p-button,
+.p-splitbutton.p-button-success>.p-button {
+    color: #ffffff;
+    background: #689F38;
+    border: 1px solid #689F38;
+}
+
+.p-mr-2 {
+    margin-right: .5rem !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
+
+.datatable-filter-demo .p-paginator .p-paginator-current {
+    margin-left: auto;
+}
+
+.datatable-filter-demo .p-progressbar {
+    height: 0.5rem;
+    background-color: #d8dadc;
+}
+
+.datatable-filter-demo .p-progressbar .p-progressbar-value {
+    background-color: #607d8b;
+}
+
+.datatable-filter-demo .p-datepicker {
+    min-width: 25rem;
+}
+
+.datatable-filter-demo .p-datepicker td {
+    font-weight: 400;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-header {
+    padding: 1rem;
+    text-align: left;
+    font-size: 1.5rem;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-paginator {
+    padding: 1rem;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-thead>tr>th {
+    text-align: left;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-datatable-tbody>tr>td {
+    cursor: auto;
+}
+
+.datatable-filter-demo .p-datatable.p-datatable-customers .p-dropdown-label:not(.p-placeholder) {
+    text-transform: uppercase;
+}
+
+.customer-badge.status-Activo {
+    border-radius: 10px;
+    background-color: #C8E6C9;
+    color: #256029;
+}
+
+.customer-badge.status-Inactivo {
+    border-radius: 10px;
+    background-color: #FFCDD2;
+    color: #C63737;
 }
