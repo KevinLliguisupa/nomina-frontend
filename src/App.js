@@ -12,22 +12,24 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import ListadoEmpleados from "./components/empleado/listado/listado";
 import Creacion from "./components/empleado/CreacionEmpleado/CreacionEmpleado";
 import ActualizacionEmpleado from "./components/empleado/Actualizacion/Actualizacion";
-
+import ShowCargo from "./components/cargo/ShowCargo";
+import ShowCiudad from "./components/ciudad/ShowCiudad";
+import ShowTitulo from "./components/titulo/ShowTitulo";
 
 function App() {
   return (
     <HelmetProvider>
-    <>
-      <Helmet>
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
-        <link
-          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet" />
+      <>
+        <Helmet>
+          <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+          <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet" />
 
-        {/* <!-- Custom styles for this template--> */}
-        <link href="css/sb-admin-2.min.css" rel="stylesheet" />
-      </Helmet>
-     
+          {/* <!-- Custom styles for this template--> */}
+          <link href="css/sb-admin-2.min.css" rel="stylesheet" />
+        </Helmet>
+
         <div id="wrapper">
           <Sidebar />
           {/* <!-- Content Wrapper --> */}
@@ -48,6 +50,9 @@ function App() {
                     <Route path='/empleados/creacion' element={<Creacion />}></Route>
                     <Route path='/empleados/actualizacion/:cedula' component={ActualizacionEmpleado} element={<ActualizacionEmpleado />}></Route>
                     {/* <Route path='/informacion/nuevo' element={<CreacionInformacion />}></Route> */}
+                    <Route path='/cargos' element={<ShowCargo></ShowCargo>}></Route>
+                    <Route path='/titulos' element={<ShowTitulo></ShowTitulo>}></Route>
+                    <Route path='/ciudades' element={<ShowCiudad></ShowCiudad>}></Route>
                   </Routes>
                 </div>
               </div>
@@ -82,8 +87,8 @@ function App() {
         {/* <!-- Page level custom scripts --> */}
         <script src="js/demo/chart-area-demo.js"></script>
         <script src="js/demo/chart-pie-demo.js"></script>
-    
-    </>
+
+      </>
     </HelmetProvider>
   )
 }
