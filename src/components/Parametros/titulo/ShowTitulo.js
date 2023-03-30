@@ -91,7 +91,8 @@ const ShowTitulo = () => {
                         </small><br></br><br></br>
 
                         <label htmlFor="tit_nombre">Niveles</label><br></br>
-                        <ListBox required="true" options={nivel} optionLabel="niv_descripcion" className="w-full md:w-14rem" value={titulonuevo.niv_id} onChange={(e) => setTitulonuevo({
+                        <ListBox required="true" options={nivel} optionLabel="niv_descripcion" className="w-full md:w-14rem" 
+                        value={titulonuevo.niv_id} onChange={(e) => setTitulonuevo({
                             tit_nombre: titulonuevo.tit_nombre,
                             niv_id: e.target.value.niv_id,
                         })} />

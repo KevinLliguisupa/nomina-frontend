@@ -65,7 +65,6 @@ const ShowCargo = () => {
                 <h5>Lista de Cargos</h5>
                 <Button icon="pi pi-plus" className="p-button-rounded p-button-success" onClick={handleShowcrear} />
 
-
                 <Dialog header="Nuevo Cargo" visible={dialogcrear} style={{ width: '25vw' }} onHide={handleClosecrear}>
                     <form onSubmit={() => { handleClosecrear(); PostCargo() }}>
                         <label htmlFor="car_nombre">Cargo</label><br></br>
@@ -77,8 +76,6 @@ const ShowCargo = () => {
                         <Button label="Crear" icon="pi pi-check" className="p-button-rounded p-button-text"/>
                     </form>
                 </Dialog>
-
-
 
                 <DataTable value={cargo} responsiveLayout="scroll" >
                     <Column field="car_id" header="ID"></Column>

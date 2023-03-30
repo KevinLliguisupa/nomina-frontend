@@ -1,7 +1,7 @@
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Routes, Route } from 'react-router-dom';
-import ShowProducts from './components/Pruebas/productos/ShowProducts'
+// import ShowProducts from './components/Pruebas/productos/ShowProducts'
 import ContratRegister from './components/contratos/registro/registros.jsx';
 import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
 import "primereact/resources/primereact.min.css";                  //core css
@@ -12,9 +12,11 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import ListadoEmpleados from "./components/empleado/listado/listado";
 import Creacion from "./components/empleado/CreacionEmpleado/CreacionEmpleado";
 import ActualizacionEmpleado from "./components/empleado/Actualizacion/Actualizacion";
-import ShowCargo from "./components/cargo/ShowCargo";
-import ShowCiudad from "./components/ciudad/ShowCiudad";
-import ShowTitulo from "./components/titulo/ShowTitulo";
+import ShowCargo from "./components/Parametros/cargo/ShowCargo";
+import ShowCiudad from "./components/Parametros/ciudad/ShowCiudad";
+import ShowTitulo from "./components/Parametros/titulo/ShowTitulo";
+import Confirmacion from "./components/empleado/CreacionEmpleado/confirmacion/confirmacion";
+// import InfoPrincipal from "./components/empleado/CreacionEmpleado/infoPrincipal/infoPrincipal";
 
 function App() {
   return (
@@ -43,7 +45,7 @@ function App() {
               <div className="row page-titles mx-4">
                 <div className="container-fluid">
                   <Routes>
-                    <Route path="/" element={<ShowProducts />} />
+                    {/* <Route path="/" element={<ShowProducts />} /> */}
                     <Route path="/contract" element={<ContratRegister />} />
                     <Route path='/empleados' element={<ListadoEmpleados></ListadoEmpleados>}></Route>
                     {/* <Route path='/empleados/nuevo' element={<CreacionEmpleado />}></Route> */}
@@ -53,6 +55,9 @@ function App() {
                     <Route path='/cargos' element={<ShowCargo></ShowCargo>}></Route>
                     <Route path='/titulos' element={<ShowTitulo></ShowTitulo>}></Route>
                     <Route path='/ciudades' element={<ShowCiudad></ShowCiudad>}></Route>
+                    <Route path='/confirmacion' element={<Confirmacion></Confirmacion>}></Route>
+                    {/* <Route path='/principal' element={<InfoPrincipal></InfoPrincipal>}></Route> */}
+
                   </Routes>
                 </div>
               </div>

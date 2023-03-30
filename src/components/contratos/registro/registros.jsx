@@ -390,12 +390,12 @@ const ContratRegister = () => {
                     rowsPerPageOptions={[5, 10, 20, 50]} filters={lazyParams.filters} onFilter={onFilter}
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                     header={header}>
-                    <Column field="con_id" header="Code" sortable></Column>
+                    <Column field="con_id" header="Code"></Column>
                     <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" headerClassName="text-center" ></Column>
-                    <Column field="con_fecha_entrada" header="Fecha Entrada" headerClassName="text-center" sortable></Column>
-                    <Column field="con_fecha_salida" header="Fecha Salida" dateFormat="dd/mm/yy" sortable></Column>
-                    <Column field="con_liquidacion_estado" header="Liquidacion" body={statusBodyTemplate} sortable></Column>
-                    <Column body={actionBodyTemplate}></Column>
+                    <Column field="con_fecha_entrada" header="Fecha Entrada" headerClassName="text-center"></Column>
+                    <Column field="con_fecha_salida" header="Fecha Salida" dateFormat="dd/mm/yy"></Column>
+                    <Column field="con_liquidacion_estado" header="Liquidacion" body={statusBodyTemplate}></Column>
+                    <Column header="Opciones" body={actionBodyTemplate}></Column>
                 </DataTable>
             </div>
             <Dialog visible={contractDialog} style={{

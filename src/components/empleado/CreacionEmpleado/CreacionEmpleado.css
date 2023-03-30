@@ -1,0 +1,68 @@
+.cardPersonalizada {
+    border-radius: 10px;
+    background-color: white;
+    border: 1px solid gainsboro;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-bottom: 4px;
+    padding-top: 10px;
+}
+
+.customer-badge.status-Activo {
+    border-radius: 3rem;
+    background-color: #C8E6C9;
+    color: #256029;
+}
+
+.customer-badge.status-Inactivo {
+    border-radius: 10px;
+    background-color: #FFCDD2;
+    color: #C63737;
+}
+
+.visto-verde::before {
+    content: '';
+    display: inline-block;
+    margin-left: 6px;
+    border: solid #22C55E;
+    border-width: 0 4px 4px 0;
+    transform: rotate(45deg);
+    width: 10px;
+    height: 20px;
+}
+
+.x-icon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+
+.x-icon::before,
+.x-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 3px;
+    background-color: red;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.x-icon::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.centrar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.text-confirmacion {
+    font-size: 1.1rem;
+}
+
+.fila-03{
+    margin-bottom: 0.3rem;
+}

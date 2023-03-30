@@ -9,7 +9,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputMask } from 'primereact/inputmask';
 import { InputNumber } from 'primereact/inputnumber';
-
+import "./infoAdicional.css"
 
 const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
 
@@ -38,35 +38,6 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
     const [inf_afi, setInf_afi] = useState(datos.infoAdicional.inf_afi || false);
     const [inf_sicosep, setInf_sicosep] = useState(datos.infoAdicional.inf_sicosep || false);
     const [inf_acta_finiquito, setInf_acta_finiquito] = useState(datos.infoAdicional.inf_acta_finiquito || false);
-
-    const crearInformacion = () => {
-        var nuevaInfo = {
-            emp_cedula: emp_cedula,
-            inf_copia_cedula: inf_copia_cedula,
-            inf_copia_papeleta: inf_copia_papeleta,
-            inf_foto: inf_foto,
-            inf_canet_covid: inf_canet_covid,
-            inf_libreta_militar: inf_libreta_militar,
-            inf_historial_laboral: inf_historial_laboral,
-            inf_experiencia: inf_experiencia,
-            inf_certificados_laborales: inf_certificados_laborales,
-            inf_referencias_laborales: inf_referencias_laborales,
-            inf_certantecedentes: inf_certantecedentes,
-            inf_certmedico_msp: inf_certmedico_msp,
-            inf_certpsicologico: inf_certpsicologico,
-            inf_iess_entrada: inf_iess_entrada,
-            inf_cargas_familiares: inf_cargas_familiares,
-            inf_mrl: inf_mrl,
-            inf_hoja_datos: inf_hoja_datos,
-            inf_hoja_vida: inf_hoja_vida,
-            inf_afi: inf_afi,
-            inf_sicosep: inf_sicosep,
-            inf_iees_salida: inf_iees_salida,
-            inf_poliza: inf_poliza,
-            inf_acta_finiquito: inf_acta_finiquito,
-        }
-        console.log(nuevaInfo)
-    }
 
     const handleSiguiente = () => {
         var infoAdicional = {
@@ -100,8 +71,8 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
 
     return (
         <div className="card inputs">
-            <div class="row">
-                <div class="col">
+            <div className="row fila">
+                <div className="col">
                     <div>
                         <label htmlFor="historialLaboral">Historial laboral</label>
                     </div>
@@ -109,7 +80,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_historial_laboral(e.value)}></InputMask>
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="ieesSalida">Salida IESS</label>
                     </div>
@@ -117,7 +88,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_iees_salida(e.value)}></InputMask>
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="poliza">Póliza</label>
                     </div>
@@ -126,8 +97,8 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col">
+            <div className="row fila">
+                <div className="col">
                     <div>
                         <label htmlFor="certantecedentes">Certificado de antecedentes penales</label>
                     </div>
@@ -135,7 +106,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_certantecedentes(e.value)}></InputMask>
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="certmedico">Certificado médico (MSP)</label>
                     </div>
@@ -144,7 +115,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
 
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="certpsicologico">Certificado psicológico</label>
                     </div>
@@ -153,8 +124,8 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                 </div>
             </div>
 
-            <div class="row">
-            <div class="col">
+            <div className="row fila">
+                <div className="col">
                     <div>
                         <label htmlFor="experiencia">Experiencia laboral </label>
                     </div>
@@ -162,7 +133,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         value={inf_experiencia} onChange={(e) => setInf_experiencia(e.target.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="referenciasLaborales">Referencias laborales</label>
                     </div>
@@ -170,7 +141,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onValueChange={(e) => setInf_referencias_laborales(e.value)} showButtons min={0} max={100} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="cargasFamiliares">Número de cargas familiares</label>
                     </div>
@@ -178,37 +149,31 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onValueChange={(e) => setInf_cargas_familiares(e.value)} showButtons min={0} max={100} />
                 </div>
             </div>
+            <br />
 
-            <div class="row">
-                <div class="col">
+            <div className="row fila">
+                <div className="col">
                     <div>
                         <label htmlFor="copiaCedula">Copia de cédula</label>
                     </div>
                     <InputSwitch id="copiaCedula" checked={inf_copia_cedula} onChange={(e) => setInf_copia_cedula(e.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
-                        <label htmlFor="copiaPapeleta">Copia de papeleta de votación</label>
+                        <label htmlFor="copiaPapeleta">Copia de papeleta votación</label>
                     </div>
                     <InputSwitch id="copiaPapeleta" checked={inf_copia_papeleta} onChange={(e) => setInf_copia_papeleta(e.value)} />
                 </div>
 
-                <div class="col">
-                    <div>
-                        <label htmlFor="foto">Foto</label>
-                    </div>
-                    <InputSwitch id="foto" checked={inf_foto} onChange={(e) => setInf_foto(e.value)} />
-                </div>
-
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="canetCovid">Carnet Covid</label>
                     </div>
                     <InputSwitch id="canetCovid" checked={inf_canet_covid} onChange={(e) => setInf_canet_covid(e.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="libretaMilitar">Libreta militar</label>
                     </div>
@@ -216,8 +181,8 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col">
+            <div className="row fila">
+                <div className="col">
                     <div>
                         <label htmlFor="certificadoLaborales">Certificados laborales</label>
                     </div>
@@ -225,7 +190,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_certificados_laborales(e.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="iessEntrada">Entrada IESS</label>
                     </div>
@@ -233,7 +198,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_iess_entrada(e.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="mrl">MRL</label>
                     </div>
@@ -241,7 +206,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_mrl(e.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="hojaDatos">Hoja de datos</label>
                     </div>
@@ -249,17 +214,10 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_hoja_datos(e.value)} />
                 </div>
 
-                <div class="col">
-                    <div>
-                        <label htmlFor="hojaVida">Hoja de vida</label>
-                    </div>
-                    <InputSwitch id="hojaVida" checked={inf_hoja_vida}
-                        onChange={(e) => setInf_hoja_vida(e.value)} />
-                </div>
             </div>
 
-            <div class="row">
-                <div class="col">
+            <div className="row fila">
+                <div className="col">
                     <div>
                         <label htmlFor="afi">AFI</label>
                     </div>
@@ -267,7 +225,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_afi(e.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="sicosep">SICOSEP</label>
                     </div>
@@ -275,7 +233,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_sicosep(e.value)} />
                 </div>
 
-                <div class="col">
+                <div className="col">
                     <div>
                         <label htmlFor="actaFiniquito">Acta finiquitó</label>
                     </div>
@@ -283,19 +241,22 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_acta_finiquito(e.value)} />
                 </div>
 
-                <div class="col">
-
-                </div>
-
-                <div class="col">
-
+                <div className="col">
+                    <div>
+                        <label htmlFor="hojaVida">Hoja de vida</label>
+                    </div>
+                    <InputSwitch id="hojaVida" checked={inf_hoja_vida}
+                        onChange={(e) => setInf_hoja_vida(e.value)} />
                 </div>
             </div>
-            <div>
-            <Button label="Anterior" icon="pi pi-angle-left" onClick={onAnterior} />
-            <Button label="Siguiente" icon="pi pi-angle-right" onClick={handleSiguiente} />
+            <div className="d-flex">
+                <div className="mr-auto p-2">
+                    <Button label="Anterior" icon="pi pi-angle-left" onClick={onAnterior} />
+                </div>
+                <div className="p-2">
+                    <Button label="Siguiente" icon="pi pi-angle-right" onClick={handleSiguiente} />
+                </div>
             </div>
-            {/* <Button label="Submit" icon="pi pi-check" onClick={crearInformacion} /> */}
         </div>
     )
 }
