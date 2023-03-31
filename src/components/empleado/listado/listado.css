@@ -50,3 +50,10 @@
     background-color: #FFCDD2;
     color: #C63737;
 }
+
+.centrar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+

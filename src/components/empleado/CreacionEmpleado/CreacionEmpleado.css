@@ -66,3 +66,39 @@
 .fila-03{
     margin-bottom: 0.3rem;
 }
+
+.input-text {
+    width: 17.5rem;
+}
+
+.inputs {
+    font-size: 14px !important;
+    padding: 4rem !important;
+    border-radius: 10px !important;
+    margin-bottom: 1rem !important;
+}
+
+.cardInfoPricipal{
+    border-radius: 10px;
+    background-color: white;
+    border: 1px solid gainsboro;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-bottom: 1rem !important;
+    padding-top: 3rem !important;
+}
+
+.inputsAdicional {
+    font-size: 14px !important;
+    padding: 4rem !important;
+    border-radius: 10px !important;
+    margin-bottom: 1rem !important;
+}
+
+.fila {
+    margin-bottom: 0.6rem;
+}
+
+.pading-10 {
+    padding-right: 10px;
+}

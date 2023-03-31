@@ -1,11 +1,9 @@
 import React from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
 import "./confirmacion.css"
 
-const Confirmacion = ({ datos, onAnterior, onSubmit }) => {
+const Confirmacion = ({ datos, onAnterior, onSubmit, vista }) => {
 
     const handleSubmit = () => {
         onSubmit(datos);
@@ -26,10 +24,25 @@ const Confirmacion = ({ datos, onAnterior, onSubmit }) => {
                     { 'true-icon pi-check-circle': estado, 'false-icon pi-times-circle': !estado })} style={{ fontSize: "2rem" }} />
             </div>
             <div className='centrar'>
-                <h4 style={{ color: 'green' }}>{nombreEstado}</h4>
+                <h4 style={estado ? { color: 'green' }: { color: 'red' }}>{nombreEstado}</h4>
             </div>
 
         </div>
+    };
+
+    const actionsTemplate = () => {
+        if (vista === "creacion") {
+            return (
+                <div className="d-flex">
+                    <div className="mr-auto p-2">
+                        <Button label="Anterior" icon="pi pi-angle-left" onClick={onAnterior} />
+                    </div>
+                    <div className="p-2">
+                        <Button label="Enviar" icon="pi pi-angle-right" onClick={handleSubmit} />
+                    </div>
+                </div>
+            )
+        }
     };
 
     return (
@@ -133,6 +146,7 @@ const Confirmacion = ({ datos, onAnterior, onSubmit }) => {
                     <span className='font-weight-bold pading-10'>
                         Título:
                     </span>
+                    {datos.infoEmpleado.tit_id.tit_nombre}
                 </div>
             </div>
 
@@ -338,19 +352,7 @@ const Confirmacion = ({ datos, onAnterior, onSubmit }) => {
                     </div>
                 </div>
             </div>
-
-            <div className="d-flex">
-                <div className="mr-auto p-2">
-                    <Button label="Anterior" icon="pi pi-angle-left" onClick={onAnterior} />
-                </div>
-                <div className="p-2">
-                    <Button label="Enviar" icon="pi pi-angle-right" onClick={handleSubmit} />
-                </div>
-            </div>
-
-
-
-
+            {actionsTemplate()}
         </div>
     );
 };
