@@ -6,7 +6,7 @@ import { InputMask } from 'primereact/inputmask';
 import { InputNumber } from 'primereact/inputnumber';
 import "./infoAdicional.css"
 
-const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
+const CreacionInformacion = ({ datos, onSiguiente, onAnterior, vista }) => {
     const [emp_cedula] = useState(datos.infoEmpleado.emp_cedula || '');
     const [inf_historial_laboral, setInf_historial_laboral] = useState(datos.infoAdicional.inf_historial_laboral || null);
     const [inf_experiencia, setInf_experiencia] = useState(datos.infoAdicional.inf_experiencia || '');
@@ -60,29 +60,44 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
         onSiguiente({ infoAdicional: infoAdicional });
     };
 
+    const actionsTemplate = () => {
+        if (vista === "creacion") {
+            return (
+                <div className="d-flex">
+                <div className="mr-auto p-2">
+                    <Button label="Anterior" icon="pi pi-angle-left" onClick={onAnterior} />
+                </div>
+                <div className="p-2">
+                    <Button label="Siguiente" icon="pi pi-angle-right" onClick={handleSiguiente} />
+                </div>
+            </div>
+            )
+        }
+    };
+
     return (
-        <div className="card inputs">
+        <div style={{paddingLeft: "1rem"}}>
             <div className="row fila">
                 <div className="col">
                     <div>
                         <label htmlFor="historialLaboral">Historial laboral</label>
                     </div>
-                    <InputMask className="input-text" id="historialLaboral" mask="9999/99/99" value={inf_historial_laboral}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_historial_laboral(e.value)} />
+                    <InputMask className="input-text" id="historialLaboral" mask="99/99/9999" value={inf_historial_laboral}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_historial_laboral(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="ieesSalida">Salida IESS</label>
                     </div>
-                    <InputMask className="input-text" id="ieesSalida" mask="9999/99/99" value={inf_iees_salida}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_iees_salida(e.value)} />
+                    <InputMask className="input-text" id="ieesSalida" mask="99/99/9999" value={inf_iees_salida}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_iees_salida(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="poliza">Póliza</label>
                     </div>
-                    <InputMask className="input-text" id="poliza" mask="9999/99/99" value={inf_poliza}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_poliza(e.value)} />
+                    <InputMask className="input-text" id="poliza" mask="99/99/9999" value={inf_poliza}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_poliza(e.value)} />
                 </div>
             </div>
 
@@ -91,22 +106,22 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                     <div>
                         <label htmlFor="certantecedentes">Certificado de antecedentes penales</label>
                     </div>
-                    <InputMask className="input-text" id="certantecedentes" mask="9999/99/99" value={inf_certantecedentes}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_certantecedentes(e.value)} />
+                    <InputMask className="input-text" id="certantecedentes" mask="99/99/9999" value={inf_certantecedentes}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_certantecedentes(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="certmedico">Certificado médico (MSP)</label>
                     </div>
-                    <InputMask className="input-text" id="certmedico" mask="9999/99/99" value={inf_certmedico_msp}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_certmedico_msp(e.value)} />
+                    <InputMask className="input-text" id="certmedico" mask="99/99/9999" value={inf_certmedico_msp}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_certmedico_msp(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="certpsicologico">Certificado psicológico</label>
                     </div>
-                    <InputMask className="input-text" id="certpsicologico" mask="9999/99/99" value={inf_certpsicologico}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_certpsicologico(e.value)} />
+                    <InputMask className="input-text" id="certpsicologico" mask="99/99/9999" value={inf_certpsicologico}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_certpsicologico(e.value)} />
                 </div>
             </div>
 
@@ -223,14 +238,8 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior }) => {
                         onChange={(e) => setInf_hoja_vida(e.value)} />
                 </div>
             </div>
-            <div className="d-flex">
-                <div className="mr-auto p-2">
-                    <Button label="Anterior" icon="pi pi-angle-left" onClick={onAnterior} />
-                </div>
-                <div className="p-2">
-                    <Button label="Siguiente" icon="pi pi-angle-right" onClick={handleSiguiente} />
-                </div>
-            </div>
+
+            {actionsTemplate()}
         </div>
     )
 }

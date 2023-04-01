@@ -151,10 +151,10 @@ const ListadoEmpleados = () => {
 
     const verEmpleado = async (infoEmpleado) => {
         const opciones = { year: 'numeric', month: 'numeric', day: 'numeric' };
-        infoEmpleado.ciu_nacimiento_id = infoEmpleado.emp_ciudadNacimiento
-        infoEmpleado.est_id = infoEmpleado.emp_estadoCivil
-        infoEmpleado.niv_id = infoEmpleado.emp_nivel
-        infoEmpleado.tit_id = infoEmpleado.emp_titulo
+        infoEmpleado.ciudad = infoEmpleado.emp_ciudadNacimiento
+        infoEmpleado.estadoCivil = infoEmpleado.emp_estadoCivil
+        infoEmpleado.nivel = infoEmpleado.emp_nivel
+        infoEmpleado.titulo = infoEmpleado.emp_titulo
         setDisplayBasic(true);
         const dataAdicional = await InfoAdicionalService.getInformacionByCedula(infoEmpleado.emp_cedula)
 

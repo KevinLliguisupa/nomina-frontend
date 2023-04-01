@@ -12,7 +12,7 @@ import CiudadService from "../../../../services/ciudadService";
 import EstadoCivilService from "../../../../services/estadoCivilService";
 import './infoPrincipal.css'
 
-const InfoPrincipal = ({ datos, onSiguiente }) => {
+const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
     const sexoOpciones = ["Masculino", "Femenino"]
     const [emp_cedula, setEmp_cedula] = useState(datos.infoEmpleado.emp_cedula || '');
     const [emp_apellidos, setEmp_apellidos] = useState(datos.infoEmpleado.emp_apellidos || '');
@@ -69,6 +69,16 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
         setTitulos(response.data);
     }
 
+    const actionsTemplate = () => {
+        if (vista === "creacion") {
+            return (
+            <div className="d-flex justify-content-end">
+                <Button label="Siguiente" icon="pi pi-check" onClick={handleSiguiente} />
+            </div>
+            )
+        }
+    };
+
     const handleSiguiente = () => {
         setSubmitted(true);
         if (emp_cedula !== '' && emp_cedula.length === 10 && emp_apellidos !== '' && emp_nombres !== '' && emp_sexo !== null &&
@@ -90,14 +100,18 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                 emp_reentrenado: emp_reentrenado,
                 niv_id: niv_id,
                 est_id: est_id,
-                tit_id: tit_id
+                tit_id: tit_id,
+                nivel: niveles.find((nivel) => nivel.niv_id === niv_id),
+                titulo: titulos.find((titulo) => titulo.tit_id === tit_id),
+                estadoCivil: estadosCiv.find((estado) => estado.est_id === est_id),
+                ciudad: ciudades.find((ciudad) => ciudad.ciu_id === ciu_nacimiento_id)
             }
             onSiguiente({ infoEmpleado: nuevoEmpleado });
         }
     };
 
     return (
-        <div className="card inputs" >
+        <div style={{paddingLeft: "1rem"}}>
             <div className="row fila">
                 <div className="col">
                     <div>
@@ -105,7 +119,7 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     </div>
                     <InputText id="cedula" keyfilter="pnum" minLength="10" maxLength="10" required
                         value={emp_cedula} onChange={(e) => setEmp_cedula(e.target.value)} autoFocus
-                        className={classNames("input-text", { 'p-invalid': submitted && emp_cedula.length !== 10})} />
+                        className={classNames("input-text", { 'p-invalid': submitted && emp_cedula.length !== 10 })} />
                     <div>
                         {submitted && emp_cedula.length !== 10 && <small className="p-error">Campo incorrecto.</small>}
                     </div>
@@ -115,7 +129,7 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                         <label htmlFor="apellidos">Apellidos</label>
                     </div>
                     <InputText id="apellidos" value={emp_apellidos}
-                        onChange={(e) => setEmp_apellidos(e.target.value)} autoFocus required
+                        onChange={(e) => setEmp_apellidos(e.target.value)} required
                         className={classNames("input-text", { 'p-invalid': submitted && !emp_apellidos })} />
                     <div>
                         {submitted && !emp_apellidos && <small className="p-error">Campo obligatorio.</small>}
@@ -126,7 +140,7 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                         <label htmlFor="nombres">Nombres</label>
                     </div>
                     <InputText id="nombres" value={emp_nombres}
-                        onChange={(e) => setEmp_nombres(e.target.value)} autoFocus required
+                        onChange={(e) => setEmp_nombres(e.target.value)} required
                         className={classNames("input-text", { 'p-invalid': submitted && !emp_nombres })} />
                     <div>
                         {submitted && !emp_nombres && <small className="p-error">Campo obligatorio.</small>}
@@ -163,9 +177,9 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     <div>
                         <label htmlFor="ciu_nacimiento_id">Ciudad de nacimiento</label>
                     </div>
-                    {/* optionValue="ciu_id" */}
                     <Dropdown value={ciu_nacimiento_id} options={ciudades} onChange={(e) => setCiu_nacimiento_id(e.target.value)}
                         optionLabel="ciu_nombre" filter placeholder="Ciudad de nacimiento" required
+                        optionValue="ciu_id"
                         className={classNames("input-text", { 'p-invalid': submitted && !ciu_nacimiento_id })} />
                     <div>
                         {submitted && !ciu_nacimiento_id && <small className="p-error">Campo obligatorio.</small>}
@@ -195,9 +209,9 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     <div>
                         <label htmlFor="estado">Estado civil</label>
                     </div>
-                    {/* optionValue="est_id"  */}
                     <Dropdown value={est_id} options={estadosCiv} onChange={(e) => setEst_id(e.target.value)}
                         optionLabel="est_descipcion" filter placeholder="Estado civil" required
+                        optionValue="est_id"
                         className={classNames("input-text", { 'p-invalid': submitted && !est_id })} />
                     <div>
                         {submitted && !est_id && <small className="p-error">Campo obligatorio.</small>}
@@ -207,9 +221,9 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     <div>
                         <label htmlFor="nivel">Nivel de instrucción</label>
                     </div>
-                    {/* optionValue="niv_id"  */}
                     <Dropdown value={niv_id} options={niveles} onChange={(e) => setNiv_id(e.target.value)}
                         optionLabel="niv_descripcion" filter placeholder="Nivel de estudios" required
+                        optionValue="niv_id"
                         className={classNames("input-text", { 'p-invalid': submitted && !niv_id })} />
                     <div>
                         {submitted && !niv_id && <small className="p-error">Campo obligatorio.</small>}
@@ -221,6 +235,7 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
                     </div>
                     <Dropdown value={tit_id} options={titulos} onChange={(e) => setTit_id(e.target.value)}
                         optionLabel="tit_nombre" filter placeholder="Título" required
+                        optionValue="tit_id"
                         className={classNames("input-text", { 'p-invalid': submitted && !tit_id })} />
                     <div>
                         {submitted && !tit_id && <small className="p-error">Campo obligatorio.</small>}
@@ -253,13 +268,17 @@ const InfoPrincipal = ({ datos, onSiguiente }) => {
             <div>
                 <label htmlFor="cursos">Cursos</label>
             </div>
-            <InputTextarea id="cursos" aria-describedby="cursos-help" rows={3}
-                value={emp_cursos} onChange={(e) => setEmp_cursos(e.target.value)} />
+            <div>
+
+                <InputTextarea id="cursos" aria-describedby="cursos-help" rows={3} style={{width: "60rem"}}
+                    value={emp_cursos} onChange={(e) => setEmp_cursos(e.target.value)} />
+                    </div>
 
             <br />
-            <div className="d-flex justify-content-end">
+            {/* <div className="d-flex justify-content-end">
                 <Button label="Siguiente" icon="pi pi-check" onClick={handleSiguiente} />
-            </div>
+            </div> */}
+            {actionsTemplate()}
         </div>
     );
 }

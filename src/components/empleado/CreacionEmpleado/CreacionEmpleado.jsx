@@ -26,18 +26,9 @@ const Creacion = () => {
       emp_nombres: "",
       emp_reentrenado: false,
       emp_sexo: null,
-      est_id: {
-        est_id: 1,
-        est_descipcion: "Soltero/a"
-      },
-      niv_id: {
-        niv_id: 1,
-        niv_descripcion: "Ninguno"
-      },
-      tit_id: {
-        tit_id: 1,
-        tit_nombre: "Ninguno"
-      }
+      est_id: 1,
+      niv_id: 1,
+      tit_id: 1,
     },
     infoAdicional: {
       emp_cedula: "",
@@ -86,11 +77,12 @@ const Creacion = () => {
   };
 
   const handleSubmit = async (datosFormulario) => {
-    datosFormulario.infoEmpleado.ciu_nacimiento_id = datosFormulario.infoEmpleado.ciu_nacimiento_id.ciu_id
-    datosFormulario.infoEmpleado.est_id = datosFormulario.infoEmpleado.est_id.est_id
-    datosFormulario.infoEmpleado.niv_id = datosFormulario.infoEmpleado.niv_id.niv_id
-    datosFormulario.infoEmpleado.tit_id = datosFormulario.infoEmpleado.tit_id.tit_id
-    console.log(datosFormulario);
+    delete datosFormulario.infoEmpleado.nivel
+    delete datosFormulario.infoEmpleado.estadoCivil
+    delete datosFormulario.infoEmpleado.titulo
+    delete datosFormulario.infoEmpleado.ciudad
+
+    // console.log(datosFormulario);
 
     try {
       await axios({
@@ -123,7 +115,7 @@ const Creacion = () => {
       show_alert("Error al crear el empleado", "error");
       console.error("Error en la creacion del empleado");
     }
-   }
+  }
 
   return (
     <div>
@@ -135,15 +127,18 @@ const Creacion = () => {
         <Steps model={steps} activeIndex={activeIndex} />
 
         {activeIndex === 0 &&
-          <InfoPrincipal
-            datos={datos}
-            onSiguiente={handleGuardarDatos} />
+          <div className="card inputs" >
+            <InfoPrincipal
+              datos={datos} vista={"creacion"} 
+              onSiguiente={handleGuardarDatos} />
+          </div>
         }
         {activeIndex === 1 && (
+          <div  className="card inputs">
           <CreacionInformacion
-            datos={datos}
-            onSiguiente={handleGuardarDatos}
-            onAnterior={handlePrev} />
+            datos={datos} onSiguiente={handleGuardarDatos}
+            onAnterior={handlePrev} vista={"creacion"} />
+            </div>
         )}
         {activeIndex === 2 && (
           <Confirmacion

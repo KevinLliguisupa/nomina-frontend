@@ -106,7 +106,7 @@ const Confirmacion = ({ datos, onAnterior, onSubmit, vista }) => {
                     <span className='font-weight-bold pading-10'>
                         Ciudad de nacimiento:
                     </span>
-                    {datos.infoEmpleado.ciu_nacimiento_id.ciu_nombre}
+                    {datos.infoEmpleado.ciudad.ciu_nombre}
                 </div>
                 <div className="col">
                     <span className='font-weight-bold pading-10'>
@@ -121,7 +121,7 @@ const Confirmacion = ({ datos, onAnterior, onSubmit, vista }) => {
                     <span className='font-weight-bold pading-10'>
                         Estado civil:
                     </span>
-                    {datos.infoEmpleado.ciu_nacimiento_id.ciu_nombre}
+                    {datos.infoEmpleado.estadoCivil.est_descipcion}
                 </div>
                 <div className="col">
                     <span className='font-weight-bold pading-10'>
@@ -140,13 +140,13 @@ const Confirmacion = ({ datos, onAnterior, onSubmit, vista }) => {
                     <span className='font-weight-bold pading-10'>
                         Nivel de instrucción:
                     </span>
-                    {datos.infoEmpleado.niv_id.niv_descripcion}
+                    {datos.infoEmpleado.nivel.niv_descripcion}
                 </div>
                 <div className="col">
                     <span className='font-weight-bold pading-10'>
                         Título:
                     </span>
-                    {datos.infoEmpleado.tit_id.tit_nombre}
+                    {datos.infoEmpleado.titulo.tit_nombre}
                 </div>
             </div>
 
