@@ -55,6 +55,25 @@ export default function Sidebar() {
                         <span>Listado</span>
                     </NavLink>
                 </li >
+
+                < div className="sidebar-heading" >
+                    Parametros
+                </div >
+
+                {/* <!-- Nav Item - Pages Collapse Menu --> */}
+                < li className="nav-item" >
+                    <NavLink className="nav-link" to='/cargos' >
+                        <i className="fas fa-fw fa-cog"></i>
+                        <span>Cargos</span>
+                    </NavLink>
+                </li >
+
+                < li className="nav-item" >
+                    <NavLink className="nav-link" to='/titulos' >
+                        <i className="fas fa-fw fa-cog"></i>
+                        <span>Titulos</span>
+                    </NavLink>
+                </li >
             </ul >
         </div>
 

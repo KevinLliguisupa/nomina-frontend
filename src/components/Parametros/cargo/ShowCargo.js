@@ -12,7 +12,7 @@ import { InputText } from "primereact/inputtext";
 
 const ShowCargo = () => {
 
-    const url = 'http://localhost:3000/nominaweb/api/v1/cargo';
+    const url = 'http://localhost:4000/nominaweb/api/v1/cargo';
     const [cargo, setCargo] = useState([]);
 
 
@@ -36,7 +36,7 @@ const ShowCargo = () => {
         const formData = {
             car_nombre: cargonuevo
         };
-        await axios.post("http://localhost:3000/nominaweb/api/v1/cargo", formData).then(response => {
+        await axios.post("http://localhost:4000/nominaweb/api/v1/cargo", formData).then(response => {
             getCargo();
         }).catch(error => {
             console.log(error.message);
