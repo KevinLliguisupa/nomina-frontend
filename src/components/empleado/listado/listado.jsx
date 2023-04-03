@@ -8,6 +8,8 @@ import { Dialog } from 'primereact/dialog';
 import { Column } from "primereact/column";
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
+import axios from "axios";
+import { show_alert } from '../../../functions';
 
 import EmpleadoService from '../../../services/empleadoService';
 import NivelService from '../../../services/nivelService';
@@ -145,7 +147,7 @@ const ListadoEmpleados = () => {
     const verifiedBodyTemplate = (rowData) => {
         return <div className='centrar'>
             <i className={classNames(`pi customer-badge status-${rowData.emp_estado_nombre}`,
-                { 'true-icon pi-check-circle': rowData.emp_estado, 'false-icon pi-times-circle': !rowData.emp_estado })} style={{ fontSize: "1.3rem" }}/>
+                { 'true-icon pi-check-circle': rowData.emp_estado, 'false-icon pi-times-circle': !rowData.emp_estado })} style={{ fontSize: "1.3rem" }} />
         </div>
     };
 
@@ -158,22 +160,43 @@ const ListadoEmpleados = () => {
         setDisplayBasic(true);
         const dataAdicional = await InfoAdicionalService.getInformacionByCedula(infoEmpleado.emp_cedula)
 
-        dataAdicional.data.inf_certantecedentes = dataAdicional.data.inf_certantecedentes? 
-        (new Date(dataAdicional.data.inf_certantecedentes)).toLocaleDateString('es-ES', opciones):''
-        dataAdicional.data.inf_certmedico_msp = dataAdicional.data.inf_certmedico_msp? 
-        (new Date(dataAdicional.data.inf_certmedico_msp)).toLocaleDateString('es-ES', opciones) : ''
-        dataAdicional.data.inf_certpsicologico = dataAdicional.data.inf_certpsicologico? 
-        (new Date(dataAdicional.data.inf_certpsicologico)).toLocaleDateString('es-ES', opciones) : ''
-        dataAdicional.data.inf_historial_laboral = dataAdicional.data.inf_historial_laboral?
-        (new Date(dataAdicional.data.inf_historial_laboral)).toLocaleDateString('es-ES', opciones) : ''
-        dataAdicional.data.inf_iees_salida = dataAdicional.data.inf_iees_salida?
-        (new Date(dataAdicional.data.inf_iees_salida)).toLocaleDateString('es-ES', opciones) : ''
-        dataAdicional.data.inf_poliza = dataAdicional.data.inf_poliza?
-        (new Date(dataAdicional.data.inf_poliza)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_certantecedentes = dataAdicional.data.inf_certantecedentes ?
+            (new Date(dataAdicional.data.inf_certantecedentes)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_certmedico_msp = dataAdicional.data.inf_certmedico_msp ?
+            (new Date(dataAdicional.data.inf_certmedico_msp)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_certpsicologico = dataAdicional.data.inf_certpsicologico ?
+            (new Date(dataAdicional.data.inf_certpsicologico)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_historial_laboral = dataAdicional.data.inf_historial_laboral ?
+            (new Date(dataAdicional.data.inf_historial_laboral)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_iees_salida = dataAdicional.data.inf_iees_salida ?
+            (new Date(dataAdicional.data.inf_iees_salida)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_poliza = dataAdicional.data.inf_poliza ?
+            (new Date(dataAdicional.data.inf_poliza)).toLocaleDateString('es-ES', opciones) : ''
 
         const datosFormulario = { infoEmpleado: infoEmpleado, infoAdicional: dataAdicional.data }
         setDatos({ ...datos, ...datosFormulario });
     }
+
+    const cambiarEstado = async (rowData) => {
+        try {
+            await axios({
+                method: "put",
+                url: "http://localhost:4000/nominaweb/api/v1/empleado/estado/" + rowData.emp_cedula + "/?estado=" + !rowData.emp_estado
+            }).then(function (response) {
+                var mensage2 = response.data.message;
+                if (mensage2 !== 'Informacion actualizada con éxito') {
+                    show_alert("Error actualizando la información adicional", "error");
+                    console.error("Error actualizando la información adicional")
+                }
+            })
+            show_alert("Cambio de estado exitoso", "success");
+        } catch (error) {
+            show_alert("Error al cambiar el estado", "error");
+            console.error("Error al cambiar el estado empleado");
+        }
+        getEmpleados();
+    }
+
 
     const actionBodyTemplate = (rowData) => {
         return (
@@ -182,7 +205,8 @@ const ListadoEmpleados = () => {
                     onClick={() => verEmpleado(rowData)} />
                 <Button icon="pi pi-pencil" className="botones p-button-rounded p-button-success p-mr-2"
                     onClick={() => cambiarRuta('empleados/actualizacion/' + rowData.emp_cedula)} />
-                <Button icon="pi pi-trash" className="botones p-button-rounded p-button-warning" />
+                <Button icon="pi pi-trash" className="botones p-button-rounded p-button-warning"
+                    onClick={() => cambiarEstado(rowData)} />
             </React.Fragment>
         );
     };
@@ -202,9 +226,9 @@ const ListadoEmpleados = () => {
     };
 
     const nivelRowFilterTemplate = (options) => {
-        
-        return <Dropdown value={options.value} optionValue="niv_id" options={niveles} 
-            onChange={ (e) => options.filterApplyCallback(e.value)} optionLabel="niv_descripcion" placeholder="Nivel" />
+
+        return <Dropdown value={options.value} optionValue="niv_id" options={niveles}
+            onChange={(e) => options.filterApplyCallback(e.value)} optionLabel="niv_descripcion" placeholder="Nivel" />
     }
 
     const onPage = (event) => {
@@ -277,7 +301,7 @@ const ListadoEmpleados = () => {
                         showFilterMenu={false} filterField="direccion" style={{ minWidth: '8rem' }} />
                     <Column field="emp_nivel.niv_descripcion" header="Nivel" filter
                         filterElement={nivelRowFilterTemplate} showFilterMenu={false} filterField="nivel" style={{ maxWidth: '13rem' }} />
-                    <Column field="emp_estado" header="Estado" dataType="boolean" style={{ minWidth: '6rem', maxWidth: '13rem' }} 
+                    <Column field="emp_estado" header="Estado" dataType="boolean" style={{ minWidth: '6rem', maxWidth: '13rem' }}
                         filterField="estado" body={verifiedBodyTemplate} filter filterElement={verifiedRowFilterTemplate} />
                     <Column header="Opciones" filter filterElement={renderHeader} showFilterMenu={false}
                         body={actionBodyTemplate} style={{ minWidth: '8rem' }} />
