@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 // import ShowProducts from './components/Pruebas/productos/ShowProducts'
 import ContratRegister from './components/contratos/registro/registros.jsx';
 import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
@@ -46,6 +47,7 @@ function App() {
                 <div className="container-fluid">
                   <Routes>
                     {/* <Route path="/" element={<ShowProducts />} /> */}
+                    <Route path='/' element={ <Navigate to="/empleados" /> }/>
                     <Route path="/contract" element={<ContratRegister />} />
                     <Route path='/empleados' element={<ListadoEmpleados></ListadoEmpleados>}></Route>
                     {/* <Route path='/empleados/nuevo' element={<CreacionEmpleado />}></Route> */}
@@ -54,7 +56,6 @@ function App() {
                     {/* <Route path='/informacion/nuevo' element={<CreacionInformacion />}></Route> */}
                     <Route path='/cargos' element={<ShowCargo></ShowCargo>}></Route>
                     <Route path='/titulos' element={<ShowTitulo></ShowTitulo>}></Route>
-                    <Route path='/ciudades' element={<ShowCiudad></ShowCiudad>}></Route>
                     <Route path='/confirmacion' element={<Confirmacion></Confirmacion>}></Route>
                     {/* <Route path='/principal' element={<InfoPrincipal></InfoPrincipal>}></Route> */}
 

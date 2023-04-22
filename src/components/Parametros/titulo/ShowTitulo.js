@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import './ShowTitulo.css'
 import { DataTable } from 'primereact/datatable';
@@ -7,34 +6,22 @@ import { Column } from "primereact/column";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from "primereact/inputtext";
-import { ListBox } from 'primereact/listbox';
-
-
+import TituloService from "../../../services/tituloService";
 
 const ShowTitulo = () => {
 
-    const url = 'http://localhost:4000/nominaweb/api/v1/titulo';
     const [titulo, setTitulo] = useState([]);
-    const [nivel, setNivel] = useState([]);
 
 
     useEffect(() => {
-        getTitulo();
-        getNivel();
+        getTitulos();
     }, []);
 
-    const getTitulo = async () => {
-        const response = await axios.get(url);
+    const getTitulos = async () => {
+        const response = await TituloService.getTitulos();
         const titulos = response.data;
         setTitulo(titulos);
-        console.log(titulos);
-    }
 
-    const getNivel = async () => {
-        const response = await axios.get('http://localhost:4000/nominaweb/api/v1/nivel');
-        const Niveles = response.data;
-        setNivel(Niveles);
-        console.log(Niveles);
     }
 
     //Datos adquiridos
@@ -48,11 +35,12 @@ const ShowTitulo = () => {
         const formData = {
             tit_nombre: titulonuevo.tit_nombre
         };
-        await axios.post("http://localhost:4000/nominaweb/api/v1/titulo", formData).then(response => {
-            getTitulo();
+        await TituloService.postTitulo(formData).then(response => {
+            getTitulos();
         }).catch(error => {
             console.log(error.message);
         });
+        handleClosecrear();
     };
 
     //Modal Crear
@@ -76,36 +64,27 @@ const ShowTitulo = () => {
 
                 <Button icon="pi pi-plus" className="p-button-rounded p-button-success" onClick={handleShowcrear} />
 
-
-
                 <Dialog header="Nuevo Titulo" visible={dialogcrear} style={{ width: '30vw' }} onHide={handleClosecrear} >
-                    <form onSubmit={() => { handleClosecrear(); PostTitulo() }}>
-                        <label htmlFor="tit_nombre">Titulo</label><br></br>
-                        <InputText pattern="[a-zA-Z]+" required="true" id="tit_nombre" aria-describedby="tit_nombre-help" value={titulonuevo.tit_nombre} onChange={(e) => setTitulonuevo({
+                    <label htmlFor="tit_nombre">Titulo</label><br></br>
+                    <InputText required id="tit_nombre" aria-describedby="tit_nombre-help"
+                        value={titulonuevo.tit_nombre} onChange={(e) => setTitulonuevo({
                             tit_nombre: e.target.value,
                             niv_id: titulonuevo.niv_id,
                         })} /><br></br>
-                        <small id="tit_nombre-help">
-                            Ingresa un nuevo Titulo
-                        </small><br></br><br></br>
+                    <small id="tit_nombre-help">
+                        Ingresa un nuevo Titulo
+                    </small><br></br><br></br>
 
-                        {/* <label htmlFor="tit_nombre">Niveles</label><br></br> */}
-                        {/* <ListBox required="true" options={nivel} optionLabel="niv_descripcion" className="w-full md:w-14rem" 
-                        value={titulonuevo.niv_id} onChange={(e) => setTitulonuevo({
-                            tit_nombre: titulonuevo.tit_nombre,
-                            niv_id: e.target.value.niv_id,
-                        })} /> */}
-
-                        <Button label="Cancelar" icon="pi pi-times" className="p-button-rounded p-button-danger p-button-text" onClick={handleClosecrear} />
-                        <Button label="Crear" icon="pi pi-check" className="p-button-rounded p-button-text" />
-                    </form>
+                    <Button label="Cancelar" icon="pi pi-times" onClick={handleClosecrear}
+                        className="p-button-rounded p-button-danger p-button-text" />
+                    <Button label="Crear" icon="pi pi-check" className="p-button-rounded p-button-text"
+                        onClick={PostTitulo} />
                 </Dialog>
 
 
                 <DataTable value={titulo} responsiveLayout="scroll" >
                     <Column field="tit_id" header="ID"></Column>
                     <Column field="tit_nombre" header="TITULO"></Column>
-                    {/* <Column field="nivel.niv_descripcion" header="NIVEL"></Column> */}
                 </DataTable>
 
             </div>

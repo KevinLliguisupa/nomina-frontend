@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { show_alert } from '../../../functions';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
+import { Dialog } from 'primereact/dialog';
 import axios from "axios";
 
 import NivelService from '../../../services/nivelService';
@@ -51,6 +52,7 @@ const ActualizacionEmpleado = (props) => {
     const [emp_estado, setEmp_estado] = useState('');
     const [niv_id, setNiv_id] = useState('');
     const [est_id, setEst_id] = useState('');
+    const [tit_id, setTit_id] = useState('');
     const [ciu_nacimiento_id, setCiu_nacimiento_id] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
@@ -83,9 +85,23 @@ const ActualizacionEmpleado = (props) => {
     const [titulos, setTitulos] = useState([]);
 
     const getInfoEmpleado = async () => {
+        const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
 
         const dataEmpleado = await EmpleadoService.getEmpleadoByCedula(cedula)
         const dataAdicional = await InfoAdicionalService.getInformacionByCedula(cedula)
+
+        dataAdicional.data.inf_certantecedentes = dataAdicional.data.inf_certantecedentes ?
+            (new Date(dataAdicional.data.inf_certantecedentes)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_certmedico_msp = dataAdicional.data.inf_certmedico_msp ?
+            (new Date(dataAdicional.data.inf_certmedico_msp)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_certpsicologico = dataAdicional.data.inf_certpsicologico ?
+            (new Date(dataAdicional.data.inf_certpsicologico)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_historial_laboral = dataAdicional.data.inf_historial_laboral ?
+            (new Date(dataAdicional.data.inf_historial_laboral)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_iees_salida = dataAdicional.data.inf_iees_salida ?
+            (new Date(dataAdicional.data.inf_iees_salida)).toLocaleDateString('es-ES', opciones) : ''
+        dataAdicional.data.inf_poliza = dataAdicional.data.inf_poliza ?
+            (new Date(dataAdicional.data.inf_poliza)).toLocaleDateString('es-ES', opciones) : ''
 
         setEmp_cedula(dataEmpleado.data.emp_cedula)
         setEmp_apellidos(dataEmpleado.data.emp_apellidos)
@@ -103,6 +119,7 @@ const ActualizacionEmpleado = (props) => {
         // setEmp_estado(dataEmpleado.data.emp_estado)
         setNiv_id(dataEmpleado.data.emp_nivel.niv_id)
         setEst_id(dataEmpleado.data.emp_estadoCivil.est_id)
+        setTit_id(dataEmpleado.data.emp_titulo.tit_id)
         setCiu_nacimiento_id(dataEmpleado.data.emp_ciudadNacimiento.ciu_id)
 
         setInf_historial_laboral(dataAdicional.data.inf_historial_laboral)
@@ -130,9 +147,35 @@ const ActualizacionEmpleado = (props) => {
 
         setInfoEmpleado(dataEmpleado.data)
         setInfoAdicional(dataAdicional.data)
-        // console.log(dataEmpleado.data)
-        // console.log(dataAdicional.data)
     }
+
+        //Modal Crear
+        const [dialogcrear, setDialogcrear] = useState(false);
+
+        //Cerrar Modal Crear
+        const handleClosecrear = () => setDialogcrear(false);
+    
+        //Abrir Modal Crear
+        const handleShowcrear = () => setDialogcrear(true);
+    
+        const [titulonuevo, setTitulonuevo] = useState({
+            tit_nombre: "",
+            niv_id: "",
+        });
+    
+        //Post Cargos
+        const PostTitulo = async () => {
+            const formData = {
+                tit_nombre: titulonuevo.tit_nombre
+            };
+            await TituloService.postTitulo(formData).then(response => {
+                getTitulos();
+                setTit_id(response.data.tit_id);
+            }).catch(error => {
+                console.log(error.message);
+            });
+            handleClosecrear();
+        };
 
     const actualizar = async () => {
         var empleadoActualizado = {
@@ -158,11 +201,8 @@ const ActualizacionEmpleado = (props) => {
         console.log(infoAdicional)
 
         try {
-            await axios({
-                method: "put",
-                url: "http://localhost:4000/nominaweb/api/v1/empleado/" + emp_cedula,
-                data: empleadoActualizado
-            }).then(async (response) => {
+            await EmpleadoService.putEmpleado(emp_cedula, empleadoActualizado).then(
+                async (response) => {
                 var mensage1 = response.data.message;
                 if (mensage1 !== 'Empleado actualizado con éxito') {
                     show_alert("Error actualizando la información principal", "error");
@@ -170,11 +210,8 @@ const ActualizacionEmpleado = (props) => {
                 }
             })
 
-            await axios({
-                method: "put",
-                url: "http://localhost:4000/nominaweb/api/v1/informacion/cedula/" + emp_cedula,
-                data: infoAdicional
-            }).then(function (response) {
+            await InfoAdicionalService.putInformacionAdi(emp_cedula, infoAdicional).then(
+                function (response) {
                 var mensage2 = response.data.message;
                 if (mensage2 !== 'Informacion actualizada con éxito') {
                     show_alert("Error actualizando la información adicional", "error");
@@ -190,8 +227,6 @@ const ActualizacionEmpleado = (props) => {
         }
 
     }
-
-
 
     const getCiudades = async () => {
         const response = await CiudadService.getCiudades()
@@ -329,6 +364,18 @@ const ActualizacionEmpleado = (props) => {
                     </div>
                 </div>
                 <div className="col">
+                    <div>
+                        <label htmlFor="nivel">Titulo académico</label>
+                    </div>
+                    <div className="p-inputgroup">
+                        <Dropdown value={tit_id} options={titulos} onChange={(e) => setTit_id(e.target.value)}
+                            optionLabel="tit_nombre" filter placeholder="Título" required optionValue="tit_id"
+                            className={classNames("input-text", { 'p-invalid': submitted && !tit_id })} />
+                        <div>
+                            {submitted && !tit_id && <small className="p-error">Campo obligatorio.</small>}
+                        </div>
+                        <Button icon="pi pi-plus" className="p-button-sucess" onClick={handleShowcrear} />
+                    </div>
                 </div>
             </div>
 
@@ -366,22 +413,22 @@ const ActualizacionEmpleado = (props) => {
                     <div>
                         <label htmlFor="historialLaboral">Historial laboral</label>
                     </div>
-                    <InputMask className="input-text" id="historialLaboral" mask="9999/99/99" value={inf_historial_laboral}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_historial_laboral(e.value)} />
+                    <InputMask className="input-text" id="historialLaboral" mask="99/99/9999" value={inf_historial_laboral}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_historial_laboral(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="ieesSalida">Salida IESS</label>
                     </div>
-                    <InputMask className="input-text" id="ieesSalida" mask="9999/99/99" value={inf_iees_salida}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_iees_salida(e.value)} />
+                    <InputMask className="input-text" id="ieesSalida" mask="99/99/9999" value={inf_iees_salida}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_iees_salida(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="poliza">Póliza</label>
                     </div>
-                    <InputMask className="input-text" id="poliza" mask="9999/99/99" value={inf_poliza}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_poliza(e.value)} />
+                    <InputMask className="input-text" id="poliza" mask="99/99/9999" value={inf_poliza}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_poliza(e.value)} />
                 </div>
             </div>
 
@@ -390,22 +437,22 @@ const ActualizacionEmpleado = (props) => {
                     <div>
                         <label htmlFor="certantecedentes">Certificado de antecedentes penales</label>
                     </div>
-                    <InputMask className="input-text" id="certantecedentes" mask="9999/99/99" value={inf_certantecedentes}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_certantecedentes(e.value)} />
+                    <InputMask className="input-text" id="certantecedentes" mask="99/99/9999" value={inf_certantecedentes}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_certantecedentes(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="certmedico">Certificado médico (MSP)</label>
                     </div>
-                    <InputMask className="input-text" id="certmedico" mask="9999/99/99" value={inf_certmedico_msp}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_certmedico_msp(e.value)} />
+                    <InputMask className="input-text" id="certmedico" mask="99/99/9999" value={inf_certmedico_msp}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_certmedico_msp(e.value)} />
                 </div>
                 <div className="col">
                     <div>
                         <label htmlFor="certpsicologico">Certificado psicológico</label>
                     </div>
-                    <InputMask className="input-text" id="certpsicologico" mask="9999/99/99" value={inf_certpsicologico}
-                        placeholder="yyyy/mm/dd" slotChar="yyyy/mm/dd" onChange={(e) => setInf_certpsicologico(e.value)} />
+                    <InputMask className="input-text" id="certpsicologico" mask="99/99/9999" value={inf_certpsicologico}
+                        placeholder="dd/mm/yyyy" slotChar="dd/mm/yyyy" onChange={(e) => setInf_certpsicologico(e.value)} />
                 </div>
             </div>
 
@@ -531,6 +578,20 @@ const ActualizacionEmpleado = (props) => {
                 </div>
             </div>
 
+            <Dialog header="Nuevo Titulo" visible={dialogcrear} style={{ width: '30vw' }} onHide={handleClosecrear} >
+                <label htmlFor="tit_nombre">Titulo</label><br></br>
+                <InputText required id="tit_nombre" aria-describedby="tit_nombre-help" value={titulonuevo.tit_nombre}
+                    onChange={(e) => setTitulonuevo({ tit_nombre: e.target.value })} />
+                <br></br>
+                <small id="tit_nombre-help">
+                    Ingresa un nuevo Titulo
+                </small><br></br><br></br>
+
+                <Button label="Cancelar" className="p-button-rounded p-button-danger p-button-text"
+                    icon="pi pi-times" onClick={handleClosecrear} />
+                <Button label="Crear" icon="pi pi-check" className="p-button-rounded p-button-text"
+                    onClick={PostTitulo} />
+            </Dialog>
         </div>
     );
 };

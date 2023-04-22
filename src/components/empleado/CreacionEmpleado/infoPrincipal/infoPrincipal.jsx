@@ -5,7 +5,9 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { InputSwitch } from 'primereact/inputswitch';
 import { SelectButton } from 'primereact/selectbutton';
 import { Dropdown } from 'primereact/dropdown';
+import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
+import axios from "axios";
 import NivelService from "../../../../services/nivelService";
 import TituloService from "../../../../services/tituloService";
 import CiudadService from "../../../../services/ciudadService";
@@ -36,6 +38,34 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
     const [titulos, setTitulos] = useState([]);
     const [estadosCiv, setEstadosCiv] = useState([]);
     const [ciudades, setCiudades] = useState([]);
+
+    //Modal Crear
+    const [dialogcrear, setDialogcrear] = useState(false);
+
+    //Cerrar Modal Crear
+    const handleClosecrear = () => setDialogcrear(false);
+
+    //Abrir Modal Crear
+    const handleShowcrear = () => setDialogcrear(true);
+
+    const [titulonuevo, setTitulonuevo] = useState({
+        tit_nombre: "",
+        niv_id: "",
+    });
+
+    //Post Cargos
+    const PostTitulo = async () => {
+        const formData = {
+            tit_nombre: titulonuevo.tit_nombre
+        };
+        await TituloService.postTitulo(formData).then(response => {
+            getTitulos();
+            setTit_id(response.data.tit_id);
+        }).catch(error => {
+            console.log(error.message);
+        });
+        handleClosecrear();
+    };
 
     useEffect(() => {
         getCiudades();
@@ -72,9 +102,9 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
     const actionsTemplate = () => {
         if (vista === "creacion") {
             return (
-            <div className="d-flex justify-content-end">
-                <Button label="Siguiente" icon="pi pi-check" onClick={handleSiguiente} />
-            </div>
+                <div className="d-flex justify-content-end">
+                    <Button label="Siguiente" icon="pi pi-check" onClick={handleSiguiente} />
+                </div>
             )
         }
     };
@@ -111,7 +141,7 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
     };
 
     return (
-        <div style={{paddingLeft: "1rem"}}>
+        <div style={{ paddingLeft: "1rem" }}>
             <div className="row fila">
                 <div className="col">
                     <div>
@@ -233,12 +263,14 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
                     <div>
                         <label htmlFor="nivel">Titulo académico</label>
                     </div>
-                    <Dropdown value={tit_id} options={titulos} onChange={(e) => setTit_id(e.target.value)}
-                        optionLabel="tit_nombre" filter placeholder="Título" required
-                        optionValue="tit_id"
-                        className={classNames("input-text", { 'p-invalid': submitted && !tit_id })} />
-                    <div>
-                        {submitted && !tit_id && <small className="p-error">Campo obligatorio.</small>}
+                    <div className="p-inputgroup">
+                        <Dropdown value={tit_id} options={titulos} onChange={(e) => setTit_id(e.target.value)}
+                            optionLabel="tit_nombre" filter placeholder="Título" required optionValue="tit_id"
+                            className={classNames("input-text", { 'p-invalid': submitted && !tit_id })} />
+                        <div>
+                            {submitted && !tit_id && <small className="p-error">Campo obligatorio.</small>}
+                        </div>
+                        <Button icon="pi pi-plus" className="p-button-sucess" onClick={handleShowcrear} />
                     </div>
                 </div>
             </div>
@@ -264,21 +296,31 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
                 </div>
             </div>
             <br />
+            <div className="row">
 
-            <div>
-                <label htmlFor="cursos">Cursos</label>
-            </div>
-            <div>
-
-                <InputTextarea id="cursos" aria-describedby="cursos-help" rows={3} style={{width: "60rem"}}
+                <div>
+                    <label htmlFor="cursos">Cursos</label>
+                </div>
+                <InputTextarea id="cursos" aria-describedby="cursos-help" rows={3} style={{ width: "60rem" }}
                     value={emp_cursos} onChange={(e) => setEmp_cursos(e.target.value)} />
-                    </div>
-
+            </div>
             <br />
-            {/* <div className="d-flex justify-content-end">
-                <Button label="Siguiente" icon="pi pi-check" onClick={handleSiguiente} />
-            </div> */}
             {actionsTemplate()}
+
+            <Dialog header="Nuevo Titulo" visible={dialogcrear} style={{ width: '30vw' }} onHide={handleClosecrear} >
+                <label htmlFor="tit_nombre">Titulo</label><br></br>
+                <InputText required id="tit_nombre" aria-describedby="tit_nombre-help" value={titulonuevo.tit_nombre}
+                    onChange={(e) => setTitulonuevo({ tit_nombre: e.target.value })} />
+                <br></br>
+                <small id="tit_nombre-help">
+                    Ingresa un nuevo Titulo
+                </small><br></br><br></br>
+
+                <Button label="Cancelar" className="p-button-rounded p-button-danger p-button-text"
+                    icon="pi pi-times" onClick={handleClosecrear} />
+                <Button label="Crear" icon="pi pi-check" className="p-button-rounded p-button-text"
+                    onClick={PostTitulo} />
+            </Dialog>
         </div>
     );
 }

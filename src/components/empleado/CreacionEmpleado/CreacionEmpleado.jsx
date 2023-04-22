@@ -6,9 +6,11 @@ import CreacionInformacion from './infoAdicional/infoAdicional';
 import Confirmacion from './confirmacion/confirmacion';
 import { show_alert } from '../../../functions';
 import "./CreacionEmpleado.css";
+import EmpleadoService from '../../../services/empleadoService';
+import InfoAdicionalService from '../../../services/infoAdicionalService';
 
 const Creacion = () => {
-  const url = "http://localhost:4000/nominaweb/api/v1";
+  // const url = "http://localhost:4000/nominaweb/api/v1";
   const [activeIndex, setActiveIndex] = useState(0);
   const [datos, setDatos] = useState({
     infoEmpleado: {
@@ -85,22 +87,19 @@ const Creacion = () => {
     // console.log(datosFormulario);
 
     try {
-      await axios({
-        method: "post",
-        url: url + "/empleado",
-        data: datosFormulario.infoEmpleado
-      }).then(async (response) => {
+      await EmpleadoService.postEmpleado(datosFormulario.infoEmpleado).then(
+        async (response) => {
         var mensage1 = response.data.message;
         if (mensage1 === 'Empleado creado con éxito') {
 
-          await axios({
-            method: "post",
-            url: url + "/informacion",
-            data: datosFormulario.infoAdicional
-          }).then(function (response) {
+          await InfoAdicionalService.postInformacionAdi(datosFormulario.infoAdicional).then(
+            function (response) {
             var mensage2 = response.data.message;
             if (mensage2 === 'Informacion creada con éxito') {
               show_alert(mensage1, "success")
+              setTimeout(function() {
+                window.location.href = "/empleados";
+              }, 1000);
             } else {
               show_alert("Error en información adicional", "error");
               console.error("Error al crear la información adicional")
@@ -129,16 +128,16 @@ const Creacion = () => {
         {activeIndex === 0 &&
           <div className="card inputs" >
             <InfoPrincipal
-              datos={datos} vista={"creacion"} 
+              datos={datos} vista={"creacion"}
               onSiguiente={handleGuardarDatos} />
           </div>
         }
         {activeIndex === 1 && (
-          <div  className="card inputs">
-          <CreacionInformacion
-            datos={datos} onSiguiente={handleGuardarDatos}
-            onAnterior={handlePrev} vista={"creacion"} />
-            </div>
+          <div className="card inputs">
+            <CreacionInformacion
+              datos={datos} onSiguiente={handleGuardarDatos}
+              onAnterior={handlePrev} vista={"creacion"} />
+          </div>
         )}
         {activeIndex === 2 && (
           <Confirmacion

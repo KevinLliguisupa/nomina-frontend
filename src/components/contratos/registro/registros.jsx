@@ -14,11 +14,9 @@ import { classNames } from 'primereact/utils';
 import { Tag } from 'primereact/tag';
 
 import './registro.css'
+import ContratoService from "../../../services/contratoService";
 
 const ContratRegister = () => {
-
-    const url = 'http://localhost:4000/nominaweb/api/v1/contrato';
-
 
     const emptyContract = {
         con_fecha_entrada: new Date().toISOString(),
@@ -73,11 +71,10 @@ const ContratRegister = () => {
 
 
 
-    const saveContract = () => {
+    const saveContract = async () => {
         setSubmitted(true);
 
         if (contract.cont_emp.emp_cedula.trim()) {
-            console.log(contract.cont_emp.emp_cedula.trim());
             let _contract = { ...contract };
 
             const datos = {
@@ -93,12 +90,8 @@ const ContratRegister = () => {
 
 
             if (edit) {
-                console.log('editar')
-                console.log(_contract)
-
-                axios.put(`http://localhost:4000/nominaweb/api/v1/contrato/contratos/${_contract.con_id}`, datos)
+                await ContratoService.putContrato(_contract.con_id, datos)
                     .then(response => {
-                        console.log(response.data);
                     })
                     .catch(error => {
                         console.log(error);
@@ -107,11 +100,8 @@ const ContratRegister = () => {
 
 
             } else {
-                console.log('nuevo')
-                console.log(_contract)
-                axios.post('http://localhost:4000/nominaweb/api/v1/contrato/contratos', datos)
+                await ContratoService.postContrato(datos)
                     .then((response) => {
-                        console.log(response.data);
                     })
                     .catch((error) => {
                         console.error(error);
@@ -121,6 +111,7 @@ const ContratRegister = () => {
 
             setContractDialog(false);
             setContract(emptyContract);
+            getContracts();
         }
 
     }
@@ -137,7 +128,6 @@ const ContratRegister = () => {
     }
 
     const onEmployeeChange = (e) => {
-        console.log('d', e.value)
         setContract({
             ...contract, cont_emp: {
                 emp_cedula: e.value
@@ -147,7 +137,6 @@ const ContratRegister = () => {
     }
 
     const onWorkstationChange = (e) => {
-        console.log('w', e.value)
         setContract({
             ...contract, cont_puest: {
                 pue_id: e.value
@@ -157,7 +146,6 @@ const ContratRegister = () => {
     }
 
     const onLiquidationChange = (e) => {
-        console.log('l', e.value)
         const updatedContract = { ...contract, con_liquidacion_estado: e.target.value };
         setContract(updatedContract);
     };
@@ -165,16 +153,14 @@ const ContratRegister = () => {
     const deleteContract = () => {
         let _contract = { ...contract };
 
-        axios.put(`http://localhost:4000/nominaweb/api/v1/contrato/contrato/${_contract.con_id}`)
+        ContratoService.putDelete(_contract.con_id)
             .then((response) => {
-                console.log(response.data);
             })
             .catch((error) => {
                 console.error(error);
             });
         setdeleteContractDialog(false);
         setContract(emptyContract);
-        // showToast('success', 'Product Deleted', 'Product has been deleted successfully.');
     }
 
 
@@ -189,10 +175,7 @@ const ContratRegister = () => {
     }
 
     const OonInputChange = (e, name) => {
-        console.log(e)
-
         const val = (e.target && e.target.value) || '';
-        console.log('v', val)
         const fecha = new Date(val);
         let _contract = { ...contract };
         _contract[`${name}`] = fecha.toISOString();
@@ -247,7 +230,6 @@ const ContratRegister = () => {
         }
     });
     useEffect(() => {
-        console.log('hola')
         getContracts();
     }, [lazyParams]);
 
@@ -284,10 +266,8 @@ const ContratRegister = () => {
             consulta += "&puesto" + lazyParams.filters.puesto.value
         }
 
-        console.log('contract')
         setLoading(true);
-        const response = await axios.get(url + consulta);
-        console.log('c', response.data.content)
+        const response = await ContratoService.getContratosByPagination(consulta)
         setContracts(response.data);
         setTotalRecords(response.data.pagination.totalElements);
         setContractsFilter(response.data.content);
@@ -296,9 +276,8 @@ const ContratRegister = () => {
 
     //--------------Employees------------------------
     const getEmployees = async () => {
-        const response = await axios.get('http://localhost:4000/nominaweb/api/v1/empleado/empleados');
+        const response = await axios.get('https://nomina.fly.dev/nominaweb/api/v1/empleado');
 
-        console.log('e', response.data)
         setEmployees(response.data);
 
     }
@@ -306,13 +285,10 @@ const ContratRegister = () => {
     //--------------Workstation-----------------------
 
     const getWorkstation = async () => {
-        const response = await axios.get('http://localhost:4000/nominaweb/api/v1/puesto/pue');
+        const response = await axios.get('https://nomina.fly.dev/nominaweb/api/v1/puesto/pue');
 
-        console.log('w', response.data)
         setWorkstation(response.data)
     }
-
-
 
 
     useEffect(() => {
@@ -323,11 +299,7 @@ const ContratRegister = () => {
         getWorkstation();
     }, []);
 
-
-
-
     //components
-
 
     const leftToolbarTemplate = (
         <React.Fragment>
@@ -364,13 +336,11 @@ const ContratRegister = () => {
     };
 
     const onPage = (event) => {
-        console.log('eve', event)
         setLazyParams(event);
     }
     const onFilter = (event) => {
         event['first'] = 0;
         event.page = 0
-        console.log(event)
         setLazyParams(event);
     }
 

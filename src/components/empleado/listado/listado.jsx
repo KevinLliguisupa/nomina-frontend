@@ -8,7 +8,6 @@ import { Dialog } from 'primereact/dialog';
 import { Column } from "primereact/column";
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
-import axios from "axios";
 import { show_alert } from '../../../functions';
 
 import EmpleadoService from '../../../services/empleadoService';
@@ -147,7 +146,8 @@ const ListadoEmpleados = () => {
     const verifiedBodyTemplate = (rowData) => {
         return <div className='centrar'>
             <i className={classNames(`pi customer-badge status-${rowData.emp_estado_nombre}`,
-                { 'true-icon pi-check-circle': rowData.emp_estado, 'false-icon pi-times-circle': !rowData.emp_estado })} style={{ fontSize: "1.3rem" }} />
+                { 'true-icon pi-check-circle': rowData.emp_estado, 
+                'false-icon pi-times-circle': !rowData.emp_estado })} style={{ fontSize: "1.3rem" }} />
         </div>
     };
 
@@ -157,32 +157,29 @@ const ListadoEmpleados = () => {
         infoEmpleado.estadoCivil = infoEmpleado.emp_estadoCivil
         infoEmpleado.nivel = infoEmpleado.emp_nivel
         infoEmpleado.titulo = infoEmpleado.emp_titulo
-        setDisplayBasic(true);
         const dataAdicional = await InfoAdicionalService.getInformacionByCedula(infoEmpleado.emp_cedula)
-
+        
         dataAdicional.data.inf_certantecedentes = dataAdicional.data.inf_certantecedentes ?
-            (new Date(dataAdicional.data.inf_certantecedentes)).toLocaleDateString('es-ES', opciones) : ''
+        (new Date(dataAdicional.data.inf_certantecedentes)).toLocaleDateString('es-ES', opciones) : ''
         dataAdicional.data.inf_certmedico_msp = dataAdicional.data.inf_certmedico_msp ?
-            (new Date(dataAdicional.data.inf_certmedico_msp)).toLocaleDateString('es-ES', opciones) : ''
+        (new Date(dataAdicional.data.inf_certmedico_msp)).toLocaleDateString('es-ES', opciones) : ''
         dataAdicional.data.inf_certpsicologico = dataAdicional.data.inf_certpsicologico ?
-            (new Date(dataAdicional.data.inf_certpsicologico)).toLocaleDateString('es-ES', opciones) : ''
+        (new Date(dataAdicional.data.inf_certpsicologico)).toLocaleDateString('es-ES', opciones) : ''
         dataAdicional.data.inf_historial_laboral = dataAdicional.data.inf_historial_laboral ?
-            (new Date(dataAdicional.data.inf_historial_laboral)).toLocaleDateString('es-ES', opciones) : ''
+        (new Date(dataAdicional.data.inf_historial_laboral)).toLocaleDateString('es-ES', opciones) : ''
         dataAdicional.data.inf_iees_salida = dataAdicional.data.inf_iees_salida ?
-            (new Date(dataAdicional.data.inf_iees_salida)).toLocaleDateString('es-ES', opciones) : ''
+        (new Date(dataAdicional.data.inf_iees_salida)).toLocaleDateString('es-ES', opciones) : ''
         dataAdicional.data.inf_poliza = dataAdicional.data.inf_poliza ?
-            (new Date(dataAdicional.data.inf_poliza)).toLocaleDateString('es-ES', opciones) : ''
-
+        (new Date(dataAdicional.data.inf_poliza)).toLocaleDateString('es-ES', opciones) : ''
+        
         const datosFormulario = { infoEmpleado: infoEmpleado, infoAdicional: dataAdicional.data }
         setDatos({ ...datos, ...datosFormulario });
+        setDisplayBasic(true);
     }
 
     const cambiarEstado = async (rowData) => {
         try {
-            await axios({
-                method: "put",
-                url: "http://localhost:4000/nominaweb/api/v1/empleado/estado/" + rowData.emp_cedula + "/?estado=" + !rowData.emp_estado
-            }).then(function (response) {
+            await EmpleadoService.putCambiarEstado(rowData).then(function (response) {
                 var mensage2 = response.data.message;
                 if (mensage2 !== 'Informacion actualizada con éxito') {
                     show_alert("Error actualizando la información adicional", "error");

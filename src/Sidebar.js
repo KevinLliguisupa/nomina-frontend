@@ -8,7 +8,7 @@ export default function Sidebar() {
             <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" >
 
                 {/* <!-- Sidebar - Brand --> */}
-                < a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html" >
+                < a className="sidebar-brand d-flex align-items-center justify-content-center" href="/empleados" >
                     <div className="sidebar-brand-icon rotate-n-15">
                         <i className="fas fa-laugh-wink"></i>
                     </div>
@@ -16,11 +16,11 @@ export default function Sidebar() {
                 </a >
 
                 {/* <!-- Nav Item - Dashboard --> */}
-                < li className="nav-item active" >
-                    <NavLink className="nav-link" to='/'>
+                < li className="nav-item active " >
+                    <div className="nav-link" >
                         <i className="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span>
-                    </NavLink>
+                    </div>
                 </li >
 
                 {/* <!-- Heading --> */}
