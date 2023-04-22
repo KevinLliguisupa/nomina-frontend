@@ -15,8 +15,12 @@ import { Tag } from 'primereact/tag';
 
 import './registro.css'
 import ContratoService from "../../../services/contratoService";
+import PuestoService from "../../../services/puestoService";
+import EmpleadoService from "../../../services/empleadoService";
 
 const ContratRegister = () => {
+
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
 
     const emptyContract = {
         con_fecha_entrada: new Date().toISOString(),
@@ -242,7 +246,7 @@ const ContratRegister = () => {
             consulta += "&estado" + lazyParams.filters.estado.value
         }
         if (lazyParams.filters.contractId.value !== '' && lazyParams.filters.contractId.value !== null) {
-            consulta += "&contractId" + lazyParams.filters.contractId.value
+            consulta += "&contractId=" + lazyParams.filters.contractId.value
         }
         if (lazyParams.filters.fechaE.value !== '' && lazyParams.filters.fechaE.value !== null) {
             consulta += "&fechaE" + lazyParams.filters.fechaE.value
@@ -265,9 +269,18 @@ const ContratRegister = () => {
         if (lazyParams.filters.puesto.value !== '' && lazyParams.filters.puesto.value !== null) {
             consulta += "&puesto" + lazyParams.filters.puesto.value
         }
+        // console.log(consulta)
 
         setLoading(true);
         const response = await ContratoService.getContratosByPagination(consulta)
+        const contratoInfo = response.data.content;
+        contratoInfo.map((contrato) => {
+            contrato.con_fecha_entrada = contrato.con_fecha_entrada ?
+            (new Date(contrato.con_fecha_entrada)).toLocaleDateString('es-ES', opciones) : ''
+            contrato.con_fecha_salida = contrato.con_fecha_salida ?
+            (new Date(contrato.con_fecha_salida)).toLocaleDateString('es-ES', opciones) : ''
+            return 0;
+        });
         setContracts(response.data);
         setTotalRecords(response.data.pagination.totalElements);
         setContractsFilter(response.data.content);
@@ -276,7 +289,7 @@ const ContratRegister = () => {
 
     //--------------Employees------------------------
     const getEmployees = async () => {
-        const response = await axios.get('https://nomina.fly.dev/nominaweb/api/v1/empleado');
+        const response = await EmpleadoService.getAllEmpleados()
 
         setEmployees(response.data);
 
@@ -285,7 +298,7 @@ const ContratRegister = () => {
     //--------------Workstation-----------------------
 
     const getWorkstation = async () => {
-        const response = await axios.get('https://nomina.fly.dev/nominaweb/api/v1/puesto/pue');
+        const response = await PuestoService.getPuestos()
 
         setWorkstation(response.data)
     }
@@ -341,12 +354,16 @@ const ContratRegister = () => {
     const onFilter = (event) => {
         event['first'] = 0;
         event.page = 0
+        console.log(event);
         setLazyParams(event);
     }
 
 
     return (
         <div className="datatable-filter-demo">
+                        <div className="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 className="h3 mb-0 text-gray-800">Listado de contratos</h1>
+            </div>
 
             <Toast ref={toast} />
             <div className="card">
@@ -360,7 +377,12 @@ const ContratRegister = () => {
                     rowsPerPageOptions={[5, 10, 20, 50]} filters={lazyParams.filters} onFilter={onFilter}
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                     header={header}>
-                    <Column field="con_id" header="Code"></Column>
+
+{/* <Column field="emp_cedula" header="Cédula" filter filterPlaceholder="1234...."
+                        filterField="cedula" showFilterMenu={false} style={{ maxWidth: '15rem' }} /> */}
+
+                    <Column field="con_id" header="Codigo"></Column>
+
                     <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" headerClassName="text-center" ></Column>
                     <Column field="con_fecha_entrada" header="Fecha Entrada" headerClassName="text-center"></Column>
                     <Column field="con_fecha_salida" header="Fecha Salida" dateFormat="dd/mm/yy"></Column>
@@ -368,6 +390,7 @@ const ContratRegister = () => {
                     <Column header="Opciones" body={actionBodyTemplate}></Column>
                 </DataTable>
             </div>
+
             <Dialog visible={contractDialog} style={{
                 width: '450px'
             }} header="Detalle Contrato" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
@@ -425,7 +448,8 @@ const ContratRegister = () => {
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     {contract && (
                         <span>
-                            Are you sure you want to delete <b>{contract.cont_emp.emp_cedula}</b>?
+                            ¿Seguro de eliminar el contrato <b>Codigo: {contract.con_id}? <br />
+                            Empleado: {contract.cont_emp.emp_cedula}</b>
                         </span>
                     )}
                 </div>

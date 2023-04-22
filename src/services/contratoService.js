@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const url = "http://localhost:3000/nominaweb/api/v1/contrato";
-const url = "https://nomina.fly.dev/nominaweb/api/v1/contrato/";
+const url = "https://nomina.fly.dev/nominaweb/api/v1/contrato";
 
 const ContratoService = {
     getContratosByPagination(consulta) {

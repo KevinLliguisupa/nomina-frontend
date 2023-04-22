@@ -4,6 +4,9 @@ import axios from "axios";
 const url = "https://nomina.fly.dev/nominaweb/api/v1/empleado";
 
 const EmpleadoService = {
+  getAllEmpleados(){
+    return axios.get(url + "/consulta?estado=true")
+  },
   getEmpleadosByPagination(consulta) {
     return axios.get(url + consulta);
   },
