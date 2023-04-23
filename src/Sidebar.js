@@ -74,6 +74,13 @@ export default function Sidebar() {
                         <span>Titulos</span>
                     </NavLink>
                 </li >
+
+                < li className="nav-item" >
+                    <NavLink className="nav-link" to='/puestos' >
+                        <i className="fas fa-fw fa-cog"></i>
+                        <span>Puestos</span>
+                    </NavLink>
+                </li >
             </ul >
         </div>
 
