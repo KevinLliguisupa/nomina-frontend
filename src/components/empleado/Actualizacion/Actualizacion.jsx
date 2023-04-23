@@ -11,7 +11,6 @@ import { show_alert } from '../../../functions';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
-import axios from "axios";
 
 import NivelService from '../../../services/nivelService';
 import CiudadService from '../../../services/ciudadService';
@@ -19,6 +18,7 @@ import EstadoCivilService from '../../../services/estadoCivilService';
 import EmpleadoService from '../../../services/empleadoService';
 import InfoAdicionalService from '../../../services/infoAdicionalService';
 import TituloService from '../../../services/tituloService';
+import { subirArchivo } from '../../../firebase/config';
 
 const ActualizacionEmpleado = (props) => {
 
@@ -83,6 +83,7 @@ const ActualizacionEmpleado = (props) => {
     const [estadosCiv, setEstadosCiv] = useState([]);
     const [ciudades, setCiudades] = useState([]);
     const [titulos, setTitulos] = useState([]);
+    const [archivo, setArchivo] = useState(null);
 
     const getInfoEmpleado = async () => {
         const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -177,18 +178,34 @@ const ActualizacionEmpleado = (props) => {
             handleClosecrear();
         };
 
+        const handleChange = (event) => {
+            setArchivo(event.target.files[0]);
+          };
+
     const actualizar = async () => {
+        let imagen_url=null;
+        try {
+            if (archivo !== "" && archivo !== null){
+                imagen_url= await subirArchivo(archivo, emp_cedula)
+              }
+            
+        } catch (error) {
+            console.error(error);
+            imagen_url=null;
+        }
+
         var empleadoActualizado = {
             emp_cedula: emp_cedula,
             emp_apellidos: emp_apellidos,
             emp_nombres: emp_nombres,
             emp_celular: emp_celular,
             emp_email: emp_email,
+            emp_imagen: imagen_url  !==null ? imagen_url : emp_imagen,
             emp_direccion: emp_direccion,
             emp_lugar_nacimiento: emp_lugar_nacimiento,
             emp_discapacidad: emp_discapacidad,
             emp_sexo: emp_sexo,
-            emp_estado: true,
+            emp_estado: emp_estado,
             ciu_nacimiento_id: ciu_nacimiento_id,
             emp_cursos: emp_cursos,
             emp_credencial120: emp_credencial120,
@@ -197,8 +214,34 @@ const ActualizacionEmpleado = (props) => {
             est_id: est_id,
         }
 
-        console.log(empleadoActualizado)
-        console.log(infoAdicional)
+        var infoActualizada = {
+            emp_cedula: emp_cedula,
+            inf_acta_finiquito: inf_acta_finiquito,
+            inf_afi: inf_afi,
+            inf_canet_covid: inf_canet_covid,
+            inf_cargas_familiares: inf_cargas_familiares,
+            inf_certantecedentes: inf_certantecedentes,
+            inf_certificados_laborales: inf_certantecedentes,
+            inf_certmedico_msp: inf_certmedico_msp,
+            inf_certpsicologico: inf_certpsicologico,
+            inf_copia_cedula: inf_copia_cedula,
+            inf_copia_papeleta: inf_copia_papeleta,
+            inf_experiencia: inf_experiencia,
+            inf_foto: inf_foto,
+            inf_historial_laboral: inf_historial_laboral,
+            inf_hoja_datos: inf_hoja_datos,
+            inf_hoja_vida: inf_hoja_vida,
+            inf_iees_salida: inf_iees_salida,
+            inf_iess_entrada: inf_iess_entrada,
+            inf_libreta_militar: inf_libreta_militar,
+            inf_mrl: inf_mrl,
+            inf_poliza: inf_poliza,
+            inf_referencias_laborales: inf_referencias_laborales,
+            inf_sicosep: inf_sicosep
+          }
+
+        // console.log(empleadoActualizado)
+        // console.log(infoActualizada)
 
         try {
             await EmpleadoService.putEmpleado(emp_cedula, empleadoActualizado).then(
@@ -210,7 +253,7 @@ const ActualizacionEmpleado = (props) => {
                 }
             })
 
-            await InfoAdicionalService.putInformacionAdi(emp_cedula, infoAdicional).then(
+            await InfoAdicionalService.putInformacionAdi(emp_cedula, infoActualizada).then(
                 function (response) {
                 var mensage2 = response.data.message;
                 if (mensage2 !== 'Informacion actualizada con éxito') {
@@ -397,6 +440,12 @@ const ActualizacionEmpleado = (props) => {
                         <label htmlFor="reentrenado">Reentrenado</label>
                     </div>
                     <InputSwitch checked={emp_reentrenado} onChange={(e) => setEmp_reentrenado(e.value)} />
+                </div>
+                <div className="col">
+                    <div>
+                        <label htmlFor="reentrenado">Fotografía</label>
+                    </div>
+                    <input type="file" accept="image/*" onChange={handleChange} />
                 </div>
             </div>
             <br />

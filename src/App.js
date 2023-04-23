@@ -18,6 +18,7 @@ import ShowCiudad from "./components/Parametros/ciudad/ShowCiudad";
 import ShowTitulo from "./components/Parametros/titulo/ShowTitulo";
 import Confirmacion from "./components/empleado/CreacionEmpleado/confirmacion/confirmacion";
 import Puesto from "./components/Parametros/puesto/puesto";
+import Imagen from "./components/documentos/imagen";
 // import InfoPrincipal from "./components/empleado/CreacionEmpleado/infoPrincipal/infoPrincipal";
 
 function App() {
@@ -59,7 +60,6 @@ function App() {
                     <Route path='/titulos' element={<ShowTitulo></ShowTitulo>}></Route>
                     {/* <Route path='/confirmacion' element={<Confirmacion></Confirmacion>}></Route> */}
                     <Route path='/puestos' element={<Puesto></Puesto>}></Route>
-                    {/* <Route path='/principal' element={<InfoPrincipal></InfoPrincipal>}></Route> */}
 
                   </Routes>
                 </div>

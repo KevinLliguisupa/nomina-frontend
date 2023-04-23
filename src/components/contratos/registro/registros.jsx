@@ -24,9 +24,9 @@ const ContratRegister = () => {
 
     const emptyContract = {
         con_fecha_entrada: new Date().toISOString(),
-        con_fecha_salida: new Date().toISOString(),
+        con_fecha_salida: null,
         con_liquidacion_estado: false,
-        con_liquidacion_fecha: new Date().toISOString(),
+        con_liquidacion_fecha: null,
         con_liquidacion_observacion: "",
         con_estado: true,
         cont_emp: {
@@ -275,9 +275,10 @@ const ContratRegister = () => {
         const response = await ContratoService.getContratosByPagination(consulta)
         const contratoInfo = response.data.content;
         contratoInfo.map((contrato) => {
-            contrato.con_fecha_entrada = contrato.con_fecha_entrada ?
+            
+            contrato.con_fecha_entrada_texto = contrato.con_fecha_entrada ?
             (new Date(contrato.con_fecha_entrada)).toLocaleDateString('es-ES', opciones) : ''
-            contrato.con_fecha_salida = contrato.con_fecha_salida ?
+            contrato.con_fecha_salida_texto = contrato.con_fecha_salida ?
             (new Date(contrato.con_fecha_salida)).toLocaleDateString('es-ES', opciones) : ''
             return 0;
         });
@@ -384,8 +385,8 @@ const ContratRegister = () => {
                     <Column field="con_id" header="Codigo"></Column>
 
                     <Column field={(employees) => `${employees.cont_emp.emp_cedula} - ${employees.cont_emp.emp_nombres} ${employees.cont_emp.emp_apellidos}`} header="Empleado" headerClassName="text-center" ></Column>
-                    <Column field="con_fecha_entrada" header="Fecha Entrada" headerClassName="text-center"></Column>
-                    <Column field="con_fecha_salida" header="Fecha Salida" dateFormat="dd/mm/yy"></Column>
+                    <Column field="con_fecha_entrada_texto" header="Fecha Entrada" headerClassName="text-center"></Column>
+                    <Column field="con_fecha_salida_texto" header="Fecha Salida" dateFormat="dd/mm/yy"></Column>
                     <Column field="con_liquidacion_estado" header="Liquidacion" body={statusBodyTemplate}></Column>
                     <Column header="Opciones" body={actionBodyTemplate}></Column>
                 </DataTable>
@@ -415,7 +416,7 @@ const ContratRegister = () => {
                     </div>
                     <div className="p-field p-col">
                         <label htmlFor="date">Fecha Salida</label>
-                        <Calendar id="date" value={new Date(contract.con_fecha_salida)} onChange={(e) => OonInputChange(e, 'con_fecha_salida')} dateFormat="dd/mm/yy" />
+                        <Calendar id="date" value={null} onChange={(e) => OonInputChange(e, 'con_fecha_salida')} dateFormat="dd/mm/yy" />
                     </div>
                 </div>
                 <div className="p-field">
@@ -431,7 +432,7 @@ const ContratRegister = () => {
                         </div>
                         <div className="p-field p-col">
                             <label htmlFor="date">Fecha Liquidación</label>
-                            <Calendar id="date" value={new Date(contract.con_liquidacion_fecha)} onChange={(e) => OonInputChange(e, 'con_liquidacion_fecha')} dateFormat="dd/mm/yy" />
+                            <Calendar id="date" value={null} onChange={(e) => OonInputChange(e, 'con_liquidacion_fecha')} dateFormat="dd/mm/yy" />
                         </div>
                     </div>
                     <label htmlFor="description">Description</label>

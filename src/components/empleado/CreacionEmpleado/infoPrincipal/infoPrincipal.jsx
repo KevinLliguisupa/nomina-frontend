@@ -7,12 +7,12 @@ import { SelectButton } from 'primereact/selectbutton';
 import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
-import axios from "axios";
 import NivelService from "../../../../services/nivelService";
 import TituloService from "../../../../services/tituloService";
 import CiudadService from "../../../../services/ciudadService";
 import EstadoCivilService from "../../../../services/estadoCivilService";
 import './infoPrincipal.css'
+
 
 const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
     const sexoOpciones = ["Masculino", "Femenino"]
@@ -38,6 +38,7 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
     const [titulos, setTitulos] = useState([]);
     const [estadosCiv, setEstadosCiv] = useState([]);
     const [ciudades, setCiudades] = useState([]);
+    const [archivo, setArchivo] = useState(null);
 
     //Modal Crear
     const [dialogcrear, setDialogcrear] = useState(false);
@@ -119,6 +120,7 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
                 emp_nombres: emp_nombres,
                 emp_celular: emp_celular,
                 emp_email: emp_email,
+                emp_imagen: null,
                 emp_direccion: emp_direccion,
                 emp_lugar_nacimiento: emp_lugar_nacimiento,
                 emp_discapacidad: emp_discapacidad,
@@ -134,11 +136,16 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
                 nivel: niveles.find((nivel) => nivel.niv_id === niv_id),
                 titulo: titulos.find((titulo) => titulo.tit_id === tit_id),
                 estadoCivil: estadosCiv.find((estado) => estado.est_id === est_id),
-                ciudad: ciudades.find((ciudad) => ciudad.ciu_id === ciu_nacimiento_id)
+                ciudad: ciudades.find((ciudad) => ciudad.ciu_id === ciu_nacimiento_id),
+                foto: archivo
             }
             onSiguiente({ infoEmpleado: nuevoEmpleado });
         }
     };
+
+    const handleChange = (event) => {
+        setArchivo(event.target.files[0]);
+      };
 
     return (
         <div style={{ paddingLeft: "1rem" }}>
@@ -293,6 +300,13 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
                         <label htmlFor="reentrenado">Reentrenado</label>
                     </div>
                     <InputSwitch checked={emp_reentrenado} onChange={(e) => setEmp_reentrenado(e.value)} />
+                </div>
+
+                <div className="col">
+                    <div>
+                        <label htmlFor="reentrenado">Fotografía</label>
+                    </div>
+                    <input type="file" accept="image/*" onChange={handleChange} />
                 </div>
             </div>
             <br />

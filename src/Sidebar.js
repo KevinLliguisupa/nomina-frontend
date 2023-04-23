@@ -31,15 +31,15 @@ export default function Sidebar() {
                 {/* <!-- Nav Item - Pages Collapse Menu --> */}
                 < li className="nav-item" >
                     <NavLink className="nav-link" to='/empleados' >
-                        <i className="fas fa-fw fa-cog"></i>
-                        <span>Listado</span>
+                        <i className="fas fa-address-book"></i>
+                        <span>Listado empleados</span>
                     </NavLink>
                 </li >
 
                 < li className="nav-item" >
                     <NavLink className="nav-link" to='/empleados/creacion' >
-                        <i className="fas fa-fw fa-cog"></i>
-                        <span>Crear</span>
+                        <i className="fas fa-address-card"></i>
+                        <span>Crear empleado</span>
                     </NavLink>
                 </li >
 
@@ -51,8 +51,8 @@ export default function Sidebar() {
                 {/* <!-- Nav Item - Pages Collapse Menu --> */}
                 < li className="nav-item" >
                     <NavLink className="nav-link" to='/contract' >
-                        <i className="fas fa-fw fa-cog"></i>
-                        <span>Listado</span>
+                        <i className="fas fa-clipboard-list"></i>
+                        <span>Listado contratos</span>
                     </NavLink>
                 </li >
 
@@ -63,21 +63,21 @@ export default function Sidebar() {
                 {/* <!-- Nav Item - Pages Collapse Menu --> */}
                 < li className="nav-item" >
                     <NavLink className="nav-link" to='/cargos' >
-                        <i className="fas fa-fw fa-cog"></i>
+                        <i className="fas fa-chalkboard-teacher"></i>
                         <span>Cargos</span>
                     </NavLink>
                 </li >
 
                 < li className="nav-item" >
                     <NavLink className="nav-link" to='/titulos' >
-                        <i className="fas fa-fw fa-cog"></i>
+                        <i className="fas fa-graduation-cap"></i>
                         <span>Titulos</span>
                     </NavLink>
                 </li >
 
                 < li className="nav-item" >
                     <NavLink className="nav-link" to='/puestos' >
-                        <i className="fas fa-fw fa-cog"></i>
+                        <i className="fas fa-building"></i>
                         <span>Puestos</span>
                     </NavLink>
                 </li >

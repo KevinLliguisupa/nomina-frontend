@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Steps } from 'primereact/steps';
-import axios from "axios";
 import InfoPrincipal from './infoPrincipal/infoPrincipal';
 import CreacionInformacion from './infoAdicional/infoAdicional';
 import Confirmacion from './confirmacion/confirmacion';
@@ -8,9 +7,9 @@ import { show_alert } from '../../../functions';
 import "./CreacionEmpleado.css";
 import EmpleadoService from '../../../services/empleadoService';
 import InfoAdicionalService from '../../../services/infoAdicionalService';
+import { subirArchivo } from '../../../firebase/config';
 
 const Creacion = () => {
-  // const url = "http://localhost:4000/nominaweb/api/v1";
   const [activeIndex, setActiveIndex] = useState(0);
   const [datos, setDatos] = useState({
     infoEmpleado: {
@@ -23,6 +22,7 @@ const Creacion = () => {
       emp_direccion: "",
       emp_discapacidad: false,
       emp_email: "",
+      emp_imagen: "",
       emp_estado: true,
       emp_lugar_nacimiento: "",
       emp_nombres: "",
@@ -84,12 +84,25 @@ const Creacion = () => {
     delete datosFormulario.infoEmpleado.titulo
     delete datosFormulario.infoEmpleado.ciudad
 
-    // console.log(datosFormulario);
+    let imagen_url=null;
+    try {
+      if (datosFormulario.infoEmpleado.foto !== "" && datosFormulario.infoEmpleado.foto !== null){
+        imagen_url= await subirArchivo(datosFormulario.infoEmpleado.foto, datosFormulario.infoEmpleado.emp_cedula)
+      }
+      datosFormulario.infoEmpleado.emp_imagen = imagen_url  !==null ? imagen_url : ""
+        
+    } catch (error) {
+        console.error(error);
+        imagen_url=null;
+    }
+
+    delete datosFormulario.infoEmpleado.foto
 
     try {
       await EmpleadoService.postEmpleado(datosFormulario.infoEmpleado).then(
         async (response) => {
         var mensage1 = response.data.message;
+        console.log(response.data)
         if (mensage1 === 'Empleado creado con éxito') {
 
           await InfoAdicionalService.postInformacionAdi(datosFormulario.infoAdicional).then(

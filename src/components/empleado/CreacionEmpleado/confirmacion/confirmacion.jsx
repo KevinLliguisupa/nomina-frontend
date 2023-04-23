@@ -18,16 +18,20 @@ const Confirmacion = ({ datos, onAnterior, onSubmit, vista }) => {
 
     const estadoTemplate = (estado) => {
         const nombreEstado = estado ? "Activo" : "Inactivo";
-        return <div className="d-flex">
-            <div className='centrar pading-10'>
-                <i className={classNames(`pi customer-badge status-${nombreEstado}`,
-                    { 'true-icon pi-check-circle': estado, 'false-icon pi-times-circle': !estado })} style={{ fontSize: "2rem" }} />
-            </div>
-            <div className='centrar'>
-                <h4 style={estado ? { color: 'green' }: { color: 'red' }}>{nombreEstado}</h4>
-            </div>
+        return (
+            <div style={{paddingRight: "2rem"}}>
+                <div className="d-flex">
+                    <div className='centrar pading-10'>
+                        <i className={classNames(`pi customer-badge status-${nombreEstado}`,
+                            { 'true-icon pi-check-circle': estado, 'false-icon pi-times-circle': !estado })} style={{ fontSize: "2rem" }} />
+                    </div>
+                    <div className='centrar'>
+                        <h4 style={estado ? { color: 'green' } : { color: 'red' }}>{nombreEstado}</h4>
+                    </div>
 
-        </div>
+                </div>
+            </div>
+        )
     };
 
     const actionsTemplate = () => {
@@ -50,28 +54,38 @@ const Confirmacion = ({ datos, onAnterior, onSubmit, vista }) => {
             <div className="d-flex text-gray-900">
                 <div className="mr-auto ">
                     <h4>Cédula: {datos.infoEmpleado.emp_cedula}</h4>
+                    <br />
+
+                    <div className='fila text-confirmacion text-gray-800'>
+                        <span className='font-weight-bold pading-10'>
+                            Nombres:
+                        </span>
+                        {datos.infoEmpleado.emp_nombres}
+                    </div>
+                    <div className='text-confirmacion text-gray-800'>
+                        <span className='font-weight-bold pading-10'>
+                            Apellidos:
+                        </span>
+                        {datos.infoEmpleado.emp_apellidos}
+                    </div>
+                    <br />
                 </div>
+                <div>
+                    <img src={datos.infoEmpleado.emp_imagen !==null? datos.infoEmpleado.emp_imagen : "/images/empleado.png" } alt="Foto empleado" style={{maxWidth: "160px"}} height={"160"} />
+                </div>
+                <br />
+            </div>
+                <br />
+
+            <div className="d-flex text-gray-900">
+            <div className="mr-auto ">
+                <span className='text-primary fila-03'>
+                    Información del empleado
+                </span>
+            </div>
                 {estadoTemplate(datos.infoEmpleado.emp_estado)}
             </div>
-            <br />
 
-            <div className='fila text-confirmacion text-gray-800'>
-                <span className='font-weight-bold pading-10'>
-                    Nombres:
-                </span>
-                {datos.infoEmpleado.emp_nombres}
-            </div>
-            <div className='text-confirmacion text-gray-800'>
-                <span className='font-weight-bold pading-10'>
-                    Apellidos:
-                </span>
-                {datos.infoEmpleado.emp_apellidos}
-            </div>
-            <br />
-
-            <span className='text-primary fila-03'>
-                Información del empleado
-            </span>
             <div className="row fila text-confirmacion text-gray-800">
                 <div className="col">
                     <span className='font-weight-bold pading-10'>

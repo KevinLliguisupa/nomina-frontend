@@ -19,7 +19,7 @@ const CreacionInformacion = ({ datos, onSiguiente, onAnterior, vista }) => {
     const [inf_poliza, setInf_poliza] = useState(datos.infoAdicional.inf_poliza || null);
     const [inf_copia_cedula, setInf_copia_cedula] = useState(datos.infoAdicional.inf_copia_cedula || false);
     const [inf_copia_papeleta, setInf_copia_papeleta] = useState(datos.infoAdicional.inf_copia_papeleta || false);
-    const [inf_foto, setInf_foto] = useState(datos.infoAdicional.inf_foto || false);
+    const [inf_foto, setInf_foto] = useState(false);
     const [inf_canet_covid, setInf_canet_covid] = useState(datos.infoAdicional.inf_canet_covid || false);
     const [inf_libreta_militar, setInf_libreta_militar] = useState(datos.infoAdicional.inf_libreta_militar || false);
     const [inf_certificados_laborales, setInf_certificados_laborales] = useState(datos.infoAdicional.inf_certificados_laborales || false);
