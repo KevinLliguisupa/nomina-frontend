@@ -23,69 +23,16 @@ import { subirArchivo } from '../../../firebase/config';
 const ActualizacionEmpleado = (props) => {
 
     useEffect(() => {
-        getInfoEmpleado();
-        getCiudades();
-        getNiveles();
-        getEstados();
-        getTitulos();
+        // getInfoEmpleado();
+        // getCiudades();
+        // getNiveles();
+        // getEstados();
+        // getTitulos();
+        cargarOpciones();
     }, []);
 
-    const [infoEmpleado, setInfoEmpleado] = useState({})
-    const [infoAdicional, setInfoAdicional] = useState({})
 
-    const { cedula } = useParams();
-    const sexoOpciones = ["Masculino", "Femenino"]
-
-    const [emp_cedula, setEmp_cedula] = useState('');
-    const [emp_apellidos, setEmp_apellidos] = useState('');
-    const [emp_nombres, setEmp_nombres] = useState('');
-    const [emp_celular, setEmp_celular] = useState('');
-    const [emp_email, setEmp_email] = useState('');
-    const [emp_cursos, setEmp_cursos] = useState('');
-    const [emp_direccion, setEmp_direccion] = useState('');
-    const [emp_lugar_nacimiento, setEmp_lugar_nacimiento] = useState('');
-    const [emp_discapacidad, setEmp_discapacidad] = useState(false);
-    const [emp_sexo, setEmp_sexo] = useState(null);
-    const [emp_credencial120, setEmp_credencial120] = useState(false);
-    const [emp_reentrenado, setEmp_reentrenado] = useState(false);
-    const [emp_imagen, setEmp_imagen] = useState('');
-    const [emp_estado, setEmp_estado] = useState('');
-    const [niv_id, setNiv_id] = useState('');
-    const [est_id, setEst_id] = useState('');
-    const [tit_id, setTit_id] = useState('');
-    const [ciu_nacimiento_id, setCiu_nacimiento_id] = useState('');
-    const [submitted, setSubmitted] = useState(false);
-
-    const [inf_historial_laboral, setInf_historial_laboral] = useState();
-    const [inf_experiencia, setInf_experiencia] = useState('');
-    const [inf_referencias_laborales, setInf_referencias_laborales] = useState(0);
-    const [inf_certantecedentes, setInf_certantecedentes] = useState();
-    const [inf_certmedico_msp, setInf_certmedico_msp] = useState();
-    const [inf_certpsicologico, setInf_certpsicologico] = useState();
-    const [inf_cargas_familiares, setInf_cargas_familiares] = useState(0);
-    const [inf_iees_salida, setInf_iees_salida] = useState();
-    const [inf_poliza, setInf_poliza] = useState();
-    const [inf_copia_cedula, setInf_copia_cedula] = useState(false);
-    const [inf_copia_papeleta, setInf_copia_papeleta] = useState(false);
-    const [inf_foto, setInf_foto] = useState(false);
-    const [inf_canet_covid, setInf_canet_covid] = useState(false);
-    const [inf_libreta_militar, setInf_libreta_militar] = useState(false);
-    const [inf_certificados_laborales, setInf_certificados_laborales] = useState(false);
-    const [inf_iess_entrada, setInf_iess_entrada] = useState(false);
-    const [inf_mrl, setInf_mrl] = useState(false);
-    const [inf_hoja_datos, setInf_hoja_datos] = useState(false);
-    const [inf_hoja_vida, setInf_hoja_vida] = useState(false);
-    const [inf_afi, setInf_afi] = useState(false);
-    const [inf_sicosep, setInf_sicosep] = useState(false);
-    const [inf_acta_finiquito, setInf_acta_finiquito] = useState(false);
-
-    const [niveles, setNiveles] = useState([]);
-    const [estadosCiv, setEstadosCiv] = useState([]);
-    const [ciudades, setCiudades] = useState([]);
-    const [titulos, setTitulos] = useState([]);
-    const [archivo, setArchivo] = useState(null);
-
-    const getInfoEmpleado = async () => {
+    const cargarOpciones = async () => {
         const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
 
         const dataEmpleado = await EmpleadoService.getEmpleadoByCedula(cedula)
@@ -148,7 +95,141 @@ const ActualizacionEmpleado = (props) => {
 
         setInfoEmpleado(dataEmpleado.data)
         setInfoAdicional(dataAdicional.data)
+
+        const response = await CiudadService.getCiudades()
+        const ciudadesData = response.data;
+        ciudadesData.map((key) => {
+            key.ciu_nombre = key.ciu_nombre + " - " + key.ciu_provincia.pro_nombre;
+            return 0;
+        });
+        setCiudades(ciudadesData);
+        const response2 = await NivelService.getNiveles();
+        setNiveles(response2.data);
+        const response3 = await EstadoCivilService.getEstados();
+        setEstadosCiv(response3.data);
+        const response4 = await TituloService.getTitulos();
+        setTitulos(response4.data);
     }
+
+    const [infoEmpleado, setInfoEmpleado] = useState({})
+    const [infoAdicional, setInfoAdicional] = useState({})
+
+    const { cedula } = useParams();
+    const sexoOpciones = ["Masculino", "Femenino"]
+
+    const [emp_cedula, setEmp_cedula] = useState('');
+    const [emp_apellidos, setEmp_apellidos] = useState('');
+    const [emp_nombres, setEmp_nombres] = useState('');
+    const [emp_celular, setEmp_celular] = useState('');
+    const [emp_email, setEmp_email] = useState('');
+    const [emp_cursos, setEmp_cursos] = useState('');
+    const [emp_direccion, setEmp_direccion] = useState('');
+    const [emp_lugar_nacimiento, setEmp_lugar_nacimiento] = useState('');
+    const [emp_discapacidad, setEmp_discapacidad] = useState(false);
+    const [emp_sexo, setEmp_sexo] = useState(null);
+    const [emp_credencial120, setEmp_credencial120] = useState(false);
+    const [emp_reentrenado, setEmp_reentrenado] = useState(false);
+    const [emp_imagen, setEmp_imagen] = useState('');
+    const [emp_estado, setEmp_estado] = useState('');
+    const [niv_id, setNiv_id] = useState('');
+    const [est_id, setEst_id] = useState('');
+    const [tit_id, setTit_id] = useState('');
+    const [ciu_nacimiento_id, setCiu_nacimiento_id] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+
+    const [inf_historial_laboral, setInf_historial_laboral] = useState();
+    const [inf_experiencia, setInf_experiencia] = useState('');
+    const [inf_referencias_laborales, setInf_referencias_laborales] = useState(0);
+    const [inf_certantecedentes, setInf_certantecedentes] = useState();
+    const [inf_certmedico_msp, setInf_certmedico_msp] = useState();
+    const [inf_certpsicologico, setInf_certpsicologico] = useState();
+    const [inf_cargas_familiares, setInf_cargas_familiares] = useState(0);
+    const [inf_iees_salida, setInf_iees_salida] = useState();
+    const [inf_poliza, setInf_poliza] = useState();
+    const [inf_copia_cedula, setInf_copia_cedula] = useState(false);
+    const [inf_copia_papeleta, setInf_copia_papeleta] = useState(false);
+    const [inf_foto, setInf_foto] = useState(false);
+    const [inf_canet_covid, setInf_canet_covid] = useState(false);
+    const [inf_libreta_militar, setInf_libreta_militar] = useState(false);
+    const [inf_certificados_laborales, setInf_certificados_laborales] = useState(false);
+    const [inf_iess_entrada, setInf_iess_entrada] = useState(false);
+    const [inf_mrl, setInf_mrl] = useState(false);
+    const [inf_hoja_datos, setInf_hoja_datos] = useState(false);
+    const [inf_hoja_vida, setInf_hoja_vida] = useState(false);
+    const [inf_afi, setInf_afi] = useState(false);
+    const [inf_sicosep, setInf_sicosep] = useState(false);
+    const [inf_acta_finiquito, setInf_acta_finiquito] = useState(false);
+
+    const [niveles, setNiveles] = useState([]);
+    const [estadosCiv, setEstadosCiv] = useState([]);
+    const [ciudades, setCiudades] = useState([]);
+    const [titulos, setTitulos] = useState([]);
+    const [archivo, setArchivo] = useState(null);
+
+    // const getInfoEmpleado = async () => {
+    //     const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+
+    //     const dataEmpleado = await EmpleadoService.getEmpleadoByCedula(cedula)
+    //     const dataAdicional = await InfoAdicionalService.getInformacionByCedula(cedula)
+
+    //     dataAdicional.data.inf_certantecedentes = dataAdicional.data.inf_certantecedentes ?
+    //         (new Date(dataAdicional.data.inf_certantecedentes)).toLocaleDateString('es-ES', opciones) : ''
+    //     dataAdicional.data.inf_certmedico_msp = dataAdicional.data.inf_certmedico_msp ?
+    //         (new Date(dataAdicional.data.inf_certmedico_msp)).toLocaleDateString('es-ES', opciones) : ''
+    //     dataAdicional.data.inf_certpsicologico = dataAdicional.data.inf_certpsicologico ?
+    //         (new Date(dataAdicional.data.inf_certpsicologico)).toLocaleDateString('es-ES', opciones) : ''
+    //     dataAdicional.data.inf_historial_laboral = dataAdicional.data.inf_historial_laboral ?
+    //         (new Date(dataAdicional.data.inf_historial_laboral)).toLocaleDateString('es-ES', opciones) : ''
+    //     dataAdicional.data.inf_iees_salida = dataAdicional.data.inf_iees_salida ?
+    //         (new Date(dataAdicional.data.inf_iees_salida)).toLocaleDateString('es-ES', opciones) : ''
+    //     dataAdicional.data.inf_poliza = dataAdicional.data.inf_poliza ?
+    //         (new Date(dataAdicional.data.inf_poliza)).toLocaleDateString('es-ES', opciones) : ''
+
+    //     setEmp_cedula(dataEmpleado.data.emp_cedula)
+    //     setEmp_apellidos(dataEmpleado.data.emp_apellidos)
+    //     setEmp_nombres(dataEmpleado.data.emp_nombres)
+    //     setEmp_celular(dataEmpleado.data.emp_celular)
+    //     setEmp_email(dataEmpleado.data.emp_email)
+    //     setEmp_cursos(dataEmpleado.data.emp_cursos)
+    //     setEmp_direccion(dataEmpleado.data.emp_direccion)
+    //     setEmp_lugar_nacimiento(dataEmpleado.data.emp_lugar_nacimiento)
+    //     setEmp_discapacidad(dataEmpleado.data.emp_discapacidad)
+    //     setEmp_sexo(dataEmpleado.data.emp_sexo)
+    //     setEmp_credencial120(dataEmpleado.data.emp_credencial120)
+    //     setEmp_reentrenado(dataEmpleado.data.emp_reentrenado)
+    //     // setEmp_imagen(dataEmpleado.data.emp_imagen)
+    //     // setEmp_estado(dataEmpleado.data.emp_estado)
+    //     setNiv_id(dataEmpleado.data.emp_nivel.niv_id)
+    //     setEst_id(dataEmpleado.data.emp_estadoCivil.est_id)
+    //     setTit_id(dataEmpleado.data.emp_titulo.tit_id)
+    //     setCiu_nacimiento_id(dataEmpleado.data.emp_ciudadNacimiento.ciu_id)
+
+    //     setInf_historial_laboral(dataAdicional.data.inf_historial_laboral)
+    //     setInf_experiencia(dataAdicional.data.inf_experiencia)
+    //     setInf_referencias_laborales(dataAdicional.data.inf_referencias_laborales)
+    //     setInf_certantecedentes(dataAdicional.data.inf_certantecedentes)
+    //     setInf_certmedico_msp(dataAdicional.data.inf_certmedico_msp)
+    //     setInf_certpsicologico(dataAdicional.data.inf_certpsicologico)
+    //     setInf_cargas_familiares(dataAdicional.data.inf_cargas_familiares)
+    //     setInf_iees_salida(dataAdicional.data.inf_iees_salida)
+    //     setInf_poliza(dataAdicional.data.inf_poliza)
+    //     setInf_copia_cedula(dataAdicional.data.inf_copia_cedula)
+    //     setInf_copia_papeleta(dataAdicional.data.inf_copia_papeleta)
+    //     setInf_foto(dataAdicional.data.inf_foto)
+    //     setInf_canet_covid(dataAdicional.data.inf_canet_covid)
+    //     setInf_libreta_militar(dataAdicional.data.inf_libreta_militar)
+    //     setInf_certificados_laborales(dataAdicional.data.inf_certificados_laborales)
+    //     setInf_iess_entrada(dataAdicional.data.inf_iess_entrada)
+    //     setInf_mrl(dataAdicional.data.inf_mrl)
+    //     setInf_hoja_datos(dataAdicional.data.inf_hoja_datos)
+    //     setInf_hoja_vida(dataAdicional.data.inf_hoja_vida)
+    //     setInf_afi(dataAdicional.data.inf_afi)
+    //     setInf_sicosep(dataAdicional.data.inf_sicosep)
+    //     setInf_acta_finiquito(dataAdicional.data.inf_acta_finiquito)
+
+    //     setInfoEmpleado(dataEmpleado.data)
+    //     setInfoAdicional(dataAdicional.data)
+    // }
 
         //Modal Crear
         const [dialogcrear, setDialogcrear] = useState(false);
@@ -271,25 +352,25 @@ const ActualizacionEmpleado = (props) => {
 
     }
 
-    const getCiudades = async () => {
-        const response = await CiudadService.getCiudades()
-        const ciudadesData = response.data;
-        ciudadesData.map((key) => {
-            key.ciu_nombre = key.ciu_nombre + " - " + key.ciu_provincia.pro_nombre;
-            return 0;
-        });
-        setCiudades(ciudadesData);
-    }
+    // const getCiudades = async () => {
+    //     const response = await CiudadService.getCiudades()
+    //     const ciudadesData = response.data;
+    //     ciudadesData.map((key) => {
+    //         key.ciu_nombre = key.ciu_nombre + " - " + key.ciu_provincia.pro_nombre;
+    //         return 0;
+    //     });
+    //     setCiudades(ciudadesData);
+    // }
 
-    const getNiveles = async () => {
-        const response = await NivelService.getNiveles();
-        setNiveles(response.data);
-    }
+    // const getNiveles = async () => {
+    //     const response = await NivelService.getNiveles();
+    //     setNiveles(response.data);
+    // }
 
-    const getEstados = async () => {
-        const response = await EstadoCivilService.getEstados();
-        setEstadosCiv(response.data);
-    }
+    // const getEstados = async () => {
+    //     const response = await EstadoCivilService.getEstados();
+    //     setEstadosCiv(response.data);
+    // }
 
     const getTitulos = async () => {
         const response = await TituloService.getTitulos();

@@ -69,13 +69,15 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
     };
 
     useEffect(() => {
-        getCiudades();
-        getNiveles();
-        getEstados();
-        getTitulos();
+        // getCiudades();
+        // getNiveles();
+        // getEstados();
+        // getTitulos();
+        cargarOpciones();
     }, []);
 
-    const getCiudades = async () => {
+
+    const cargarOpciones = async () => {
         const response = await CiudadService.getCiudades()
         const ciudadesData = response.data;
         ciudadesData.map((key) => {
@@ -83,17 +85,33 @@ const InfoPrincipal = ({ datos, onSiguiente, vista }) => {
             return 0;
         });
         setCiudades(ciudadesData);
+        const response2 = await NivelService.getNiveles();
+        setNiveles(response2.data);
+        const response3 = await EstadoCivilService.getEstados();
+        setEstadosCiv(response3.data);
+        const response4 = await TituloService.getTitulos();
+        setTitulos(response4.data);
     }
 
-    const getNiveles = async () => {
-        const response = await NivelService.getNiveles();
-        setNiveles(response.data);
-    }
+    // const getCiudades = async () => {
+    //     const response = await CiudadService.getCiudades()
+    //     const ciudadesData = response.data;
+    //     ciudadesData.map((key) => {
+    //         key.ciu_nombre = key.ciu_nombre + " - " + key.ciu_provincia.pro_nombre;
+    //         return 0;
+    //     });
+    //     setCiudades(ciudadesData);
+    // }
 
-    const getEstados = async () => {
-        const response = await EstadoCivilService.getEstados();
-        setEstadosCiv(response.data);
-    }
+    // const getNiveles = async () => {
+    //     const response = await NivelService.getNiveles();
+    //     setNiveles(response.data);
+    // }
+
+    // const getEstados = async () => {
+    //     const response = await EstadoCivilService.getEstados();
+    //     setEstadosCiv(response.data);
+    // }
 
     const getTitulos = async () => {
         const response = await TituloService.getTitulos();

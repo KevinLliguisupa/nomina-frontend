@@ -95,7 +95,7 @@ const Puesto = () => {
 
                 <Button icon="pi pi-plus" className="p-button-rounded p-button-success" onClick={handleShowcrear} />
 
-                <Dialog header="Nuevo Titulo" visible={dialogcrear} style={{ width: '30rem' }} onHide={handleClosecrear} >
+                <Dialog header="Nuevo Puesto" visible={dialogcrear} style={{ width: '30rem' }} onHide={handleClosecrear} >
                     <label htmlFor="tit_nombre">Nombre del puesto</label><br></br>
                     <InputText pattern="[a-zA-Z]+" required id="tit_nombre" aria-describedby="tit_nombre-help"
                         value={nombrePuesto} onChange={(e) => setNombrePuesto(e.target.value)} /><br></br>
@@ -109,7 +109,7 @@ const Puesto = () => {
                     </div>
                     <div>
                         <Dropdown value={ciu_nacimiento_id} options={ciudades} onChange={(e) => setCiu_nacimiento_id(e.target.value)}
-                            optionLabel="ciu_nombre" filter placeholder="Ciudad de nacimiento" required
+                            optionLabel="ciu_nombre" filter placeholder="Ciudad puesto" required
                             optionValue="ciu_id"
                             className={classNames("input-text", { 'p-invalid': submitted && !ciu_nacimiento_id })} />
                         <div>
