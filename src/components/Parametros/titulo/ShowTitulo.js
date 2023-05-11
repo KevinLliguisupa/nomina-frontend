@@ -82,7 +82,7 @@ const ShowTitulo = () => {
                 </Dialog>
 
 
-                <DataTable value={titulo} responsiveLayout="scroll" >
+                <DataTable value={titulo} responsiveLayout="stack" >
                     <Column field="tit_id" header="ID"></Column>
                     <Column field="tit_nombre" header="TITULO"></Column>
                 </DataTable>

@@ -41,7 +41,7 @@ const Puesto = () => {
         const response = await PuestoService.getPuestos();
         const titulos = response.data;
         setTitulo(titulos);
-        console.log(titulos);
+        // console.log(titulos);
     }
 
     const getCiudades = async () => {
@@ -138,7 +138,7 @@ const Puesto = () => {
                 </Dialog>
 
 
-                <DataTable value={titulo} responsiveLayout="scroll" >
+                <DataTable value={titulo} responsiveLayout="stack" >
                     <Column field="pue_id" header="ID"></Column>
                     <Column field="pue_nombre" header="Puesto"></Column>
                     <Column field="puest_cargo.car_nombre" header="Cargo"></Column>

@@ -285,7 +285,7 @@ const ListadoEmpleados = () => {
             <div className="card">
                 <DataTable value={empleados} lazy first={lazyParams.first} totalRecords={totalRecords} onPage={onPage}
                     paginator rows={lazyParams.rows} dataKey="emp_cedula" className="p-datatable-customers" loading={loading}
-                    filterDisplay="row" showGridlines responsiveLayout="scroll" emptyMessage="No se encontro información."
+                    filterDisplay="row" showGridlines responsiveLayout="stack" emptyMessage="No se encontro información."
                     rowsPerPageOptions={[5, 10, 20, 50]} filters={lazyParams.filters} onFilter={onFilter}
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" >
                     <Column field="emp_cedula" header="Cédula" filter filterPlaceholder="1234...."

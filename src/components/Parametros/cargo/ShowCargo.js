@@ -73,7 +73,7 @@ const ShowCargo = () => {
                     </div>
                 </Dialog>
 
-                <DataTable value={cargo} responsiveLayout="scroll" >
+                <DataTable value={cargo} responsiveLayout="stack" >
                     <Column field="car_id" header="ID"></Column>
                     <Column field="car_nombre" header="CARGO"></Column>
                 </DataTable>

@@ -374,7 +374,7 @@ const ContratRegister = () => {
                     dataKey="con_id"
                     lazy first={lazyParams.first} totalRecords={totalRecords} onPage={onPage}
                     paginator rows={lazyParams.rows} className="p-datatable-customers" loading={loading}
-                    filterDisplay="row" showGridlines responsiveLayout="scroll" emptyMessage="No se encontro información."
+                    filterDisplay="row" showGridlines responsiveLayout="stack" emptyMessage="No se encontro información."
                     rowsPerPageOptions={[5, 10, 20, 50]} filters={lazyParams.filters} onFilter={onFilter}
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                     header={header}>
